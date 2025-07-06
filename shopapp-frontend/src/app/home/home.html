@@ -4,11 +4,240 @@
         color: white;
         padding: 20px;
     }
+
+    .search-box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .product-category {
+        width: 200px;
+    }
+
+    .search-input {
+        width: 300px;
+        background-color: rgb(19, 23, 42);
+        margin-right: 10px;
+        border-color: rgba(255, 255, 255, 0.5);
+        color: white;
+    }
+
+    .form-control {
+        background-color: transparent;
+        color: white;
+    }
+
+    .form-control::placeholder {
+        /* Chrome, Firefox, Opera */
+        color: rgba(255, 255, 255, 0.5);
+        opacity: 1;
+    }
+
+    .form-control:-ms-input-placeholder {
+        /* Internet Explorer */
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    .form-control::-ms-input-placeholder {
+        /* Ms Edge */
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    .product-item {
+        background-color: rgb(19, 23, 42);
+        border: 1px solid rgb(35, 39, 61);
+        border-radius: 20px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .product-image {
+        width: 100%;
+        height: auto;
+        margin-bottom: 10px;
+    }
+
+    .product-name {
+        color: white;
+    }
+
+    .product-description {
+        color: rgb(173, 178, 203);
+    }
+
+    .product-warranty {
+        color: rgb(242, 126, 212);
+    }
+
+    .product-price {
+        color: white;
+    }
+
+    .product-actions {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .space-x {
+        margin: 0px 5px;
+    }
 </style>
 <div class="container">
     <div class="intro-section">
         <h1>Đây là trang home</h1>
         <p>Trang này hiển thị danh sách các sản phẩm kèm ảnh</p>
         <p>Các bạn có thể chọn xem sản phẩm và mua hàng tại đây</p>
+
+        <div class="search-box">
+            <input type="text" class="form-control search-input" placeholder="Tìm sản phẩm">
+            <select name="" id="" class="form-control product-category">
+                <option value="" selected disabled>Danh mục sản phẩm</option>
+                <option value="">Đồ điện tử </option>
+                <option value="">Hải sản</option>
+                <option value="">Bánh kẹo</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4 col-md-6">
+            <div class="product-item">
+                <img src="https://imgix.bustle.com/rehost/2016/9/13/92f0e9fa-c656-4cdf-a455-15c05a22fdaf.jpg"
+                    alt="Wedding costume" class="product-image">
+                <p class="product-name">Name: Wedding costume</p>
+                <p class="product-description">Description: This is couple of dress for wedding</p>
+                <p class="product-price">Price: 1234567</p>
+                <p class="product-warranty">Warranty: 6 months</p>
+                <div class="product-rating">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <div class="product-actions">
+                    <button class="btn btn-primary">Thêm vào giỏ hàng</button>
+                    <span class="space-x"></span>
+                    <button class="btn btn-success">Mua ngay</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="product-item">
+                <img src="https://www.autostraddle.com/wp-content/uploads/2021/09/Legends-of-Tomorrow-615-feature-avalance-lesbian-wedding.jpg?resize=1200,675"
+                    alt="Wedding costume" class="product-image">
+                <p class="product-name">Name: Wedding costume</p>
+                <p class="product-description">Description: This is couple of dress for wedding</p>
+                <p class="product-price">Price: 1234567</p>
+                <p class="product-warranty">Warranty: 6 months</p>
+                <div class="product-rating">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <div class="product-actions">
+                    <button class="btn btn-primary">Thêm vào giỏ hàng</button>
+                    <span class="space-x"></span>
+                    <button class="btn btn-success">Mua ngay</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="product-item">
+                <img src="https://www.out.com/media-library/waverly-and-nicole-getting-married.jpg?id=32774586&width=1245&height=700&coordinates=0%2C0%2C0%2C15"
+                    alt="Wedding costume" class="product-image">
+                <p class="product-name">Name: Wedding costume</p>
+                <p class="product-description">Description: This is couple of dress for wedding</p>
+                <p class="product-price">Price: 1234567</p>
+                <p class="product-warranty">Warranty: 6 months</p>
+                <div class="product-rating">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <div class="product-actions">
+                    <button class="btn btn-primary">Thêm vào giỏ hàng</button>
+                    <span class="space-x"></span>
+                    <button class="btn btn-success">Mua ngay</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="product-item">
+                <img src="https://www.out.com/media-library/waverly-and-nicole-getting-married.jpg?id=32774586&width=1245&height=700&coordinates=0%2C0%2C0%2C15"
+                    alt="Wedding costume" class="product-image">
+                <p class="product-name">Name: Wedding costume</p>
+                <p class="product-description">Description: This is couple of dress for wedding</p>
+                <p class="product-price">Price: 1234567</p>
+                <p class="product-warranty">Warranty: 6 months</p>
+                <div class="product-rating">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <div class="product-actions">
+                    <button class="btn btn-primary">Thêm vào giỏ hàng</button>
+                    <span class="space-x"></span>
+                    <button class="btn btn-success">Mua ngay</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="product-item">
+                <img src="https://www.out.com/media-library/waverly-and-nicole-getting-married.jpg?id=32774586&width=1245&height=700&coordinates=0%2C0%2C0%2C15"
+                    alt="Wedding costume" class="product-image">
+                <p class="product-name">Name: Wedding costume</p>
+                <p class="product-description">Description: This is couple of dress for wedding</p>
+                <p class="product-price">Price: 1234567</p>
+                <p class="product-warranty">Warranty: 6 months</p>
+                <div class="product-rating">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <div class="product-actions">
+                    <button class="btn btn-primary">Thêm vào giỏ hàng</button>
+                    <span class="space-x"></span>
+                    <button class="btn btn-success">Mua ngay</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="product-item">
+                <img src="https://www.out.com/media-library/waverly-and-nicole-getting-married.jpg?id=32774586&width=1245&height=700&coordinates=0%2C0%2C0%2C15"
+                    alt="Wedding costume" class="product-image">
+                <p class="product-name">Name: Wedding costume</p>
+                <p class="product-description">Description: This is couple of dress for wedding</p>
+                <p class="product-price">Price: 1234567</p>
+                <p class="product-warranty">Warranty: 6 months</p>
+                <div class="product-rating">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <div class="product-actions">
+                    <button class="btn btn-primary">Thêm vào giỏ hàng</button>
+                    <span class="space-x"></span>
+                    <button class="btn btn-success">Mua ngay</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
