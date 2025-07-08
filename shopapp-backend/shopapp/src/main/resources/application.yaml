@@ -7,3 +7,5 @@ spring:
       max-request-size: 10MB
 server:
   port: 8090
+api:
+  prefix: api/v1
