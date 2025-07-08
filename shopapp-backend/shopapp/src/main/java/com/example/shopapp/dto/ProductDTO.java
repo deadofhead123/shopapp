@@ -7,8 +7,10 @@ import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -26,4 +28,6 @@ public class ProductDTO {
     Date createdAt;
     Date updatedAt;
     Integer categoryId;
+
+    List<MultipartFile> files;
 }
