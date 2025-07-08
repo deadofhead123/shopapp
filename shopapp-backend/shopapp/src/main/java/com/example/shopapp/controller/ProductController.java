@@ -117,18 +117,20 @@ public class ProductController {
 
             // Save thumbnail (If exists)
             List<MultipartFile> files = productDTO.getFiles();
+
+            // "files" parameter may not be sent
             files = files == null ? new ArrayList<>() : files;
 
             for(MultipartFile file : files){
                 Long fileSize = file.getSize();
-                // Check size
-                if(fileSize <= 0){
+                // "files" parameter exists but don't have data value
+                if(fileSize == 0){
                     continue;
                 }
 
                 if(fileSize > 10 * 1024 * 1024){ // 10MB
                     responseDTO.setMessage("File's size cannot larger than 10MB!");
-                    return ResponseEntity.status(HttpStatus.REQUEST_HEADER_FIELDS_TOO_LARGE).body(responseDTO);
+                    return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(responseDTO);
                 }
 
                 String contentType = file.getContentType();
