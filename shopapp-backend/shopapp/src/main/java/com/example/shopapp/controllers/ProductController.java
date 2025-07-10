@@ -68,7 +68,6 @@ public class ProductController {
             }
 
             Product newProduct = productService.createProduct(productDTO);
-            responseDTO.setData(newProduct);
 
             List<MultipartFile> files = productDTO.getFiles();
             files = files == null ? new ArrayList<>() : files;
@@ -95,6 +94,7 @@ public class ProductController {
                         .productId(newProduct.getId()).build());
             }
 
+            responseDTO.setData(newProduct);
             return ResponseEntity.ok(responseDTO);
         }
         catch(Exception e){

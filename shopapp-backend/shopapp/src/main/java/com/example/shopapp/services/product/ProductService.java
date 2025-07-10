@@ -83,7 +83,7 @@ public class ProductService implements IProductService{
 
         // Cannot insert more than 5 image of a product
         int maxImageNumber = productImageRepository.findByProductId(productImageDTO.getProductId()).size();
-        if(maxImageNumber > 5){
+        if(maxImageNumber >= 5){
             throw new InvalidParamException("Number of images cannot > 5");
         }
 
