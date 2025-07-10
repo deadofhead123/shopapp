@@ -1,4 +1,4 @@
-package com.example.shopapp.configs;
+package com.example.shopapp.configurations;
 
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
