@@ -1,8 +1,8 @@
-package com.example.shopapp.controller;
+package com.example.shopapp.controllers;
 
-import com.example.shopapp.dto.ResponseDTO;
-import com.example.shopapp.dto.UserDTO;
-import com.example.shopapp.dto.UserLoginDTO;
+import com.example.shopapp.dtos.ResponseDTO;
+import com.example.shopapp.dtos.UserDTO;
+import com.example.shopapp.dtos.UserLoginDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/users")
+@RequestMapping("${api.prefix}/users")
 public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody UserDTO userDTO, BindingResult bindingResult) {

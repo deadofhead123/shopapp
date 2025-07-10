@@ -1,8 +1,8 @@
-package com.example.shopapp.controller;
+package com.example.shopapp.controllers;
 
 import com.example.shopapp.constant.SystemConstant;
-import com.example.shopapp.dto.ProductDTO;
-import com.example.shopapp.dto.ResponseDTO;
+import com.example.shopapp.dtos.ProductDTO;
+import com.example.shopapp.dtos.ResponseDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/products")
+@RequestMapping("${api.prefix}/products")
 public class ProductController {
     @GetMapping("")
     public ResponseEntity<?> getAllProducts(@Valid @RequestBody ProductDTO productDTO, BindingResult bindingResult) {

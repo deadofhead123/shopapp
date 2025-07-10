@@ -1,4 +1,4 @@
-package com.example.shopapp.dto;
+package com.example.shopapp.dtos;
 
 import lombok.AccessLevel;
 import lombok.Data;
