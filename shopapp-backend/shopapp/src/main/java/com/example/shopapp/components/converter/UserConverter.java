@@ -16,6 +16,7 @@ public class UserConverter {
     }
 
     public UserDTO convertToDTO(User user) {
+        if(user == null) return null;
         return modelMapper.map(user, UserDTO.class);
     }
 }
