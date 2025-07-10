@@ -6,6 +6,7 @@ import com.example.shopapp.dtos.ProductImageDTO;
 import com.example.shopapp.dtos.ResponseDTO;
 import com.example.shopapp.entities.Product;
 import com.example.shopapp.entities.ProductImage;
+import com.example.shopapp.exceptions.InvalidParamException;
 import com.example.shopapp.services.product.IProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -76,11 +77,17 @@ public class ProductController {
     }
 
     @PostMapping(value = "/uploads/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> uploadImage(@PathVariable("id") Long productId, List<MultipartFile> files){
+    public ResponseEntity<?> uploadImage(@PathVariable("id") Long productId, @ModelAttribute("files") List<MultipartFile> files){
         ResponseDTO responseDTO = new ResponseDTO();
 
         try{
             Product existingProduct = productService.getProductById(productId);
+
+            // Prevent upload more than MAX_IMAGE_PER_PRODUCT images (From request) -> reduce check time in server side
+            if(files.size() > ProductImage.MAX_IMAGE_PER_PRODUCT){
+                throw new InvalidParamException("You can only upload up to " + ProductImage.MAX_IMAGE_PER_PRODUCT + " images");
+            }
+
             List<ProductImage> productImages = new ArrayList<>();
             files = files == null ? new ArrayList<>() : files;
 
@@ -116,7 +123,11 @@ public class ProductController {
         }
     }
 
-    public String saveImage(MultipartFile file) throws IOException {
+    public String saveImage(MultipartFile file) throws Exception {
+        if(file.getOriginalFilename() == null){
+            throw new IOException("Invalid format image");
+        }
+
         // Folder to save
         Path uploadDir = Paths.get(SystemConstant.imagePathPrefix + productImageDirectoryPrefix);
         if(Files.notExists(uploadDir)){

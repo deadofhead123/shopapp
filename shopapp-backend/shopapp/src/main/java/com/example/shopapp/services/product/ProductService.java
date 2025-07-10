@@ -81,7 +81,10 @@ public class ProductService implements IProductService{
                 .product(product)
                 .build();
 
-        // Cannot insert more than 5 image of a product
+        // Cannot insert more than 5 image of a product (Check in database)
+        /* Problem: a product have 4 image exists in "product_images" table. Your purpose is to add 2 images.
+        After add 1 images -> 5 images -> maximum -> Cannot add 1 remaining image -> Should solve this?
+        */
         int maxImageNumber = productImageRepository.findByProductId(productImageDTO.getProductId()).size();
         if(maxImageNumber >= 5){
             throw new InvalidParamException("Number of images cannot > 5");

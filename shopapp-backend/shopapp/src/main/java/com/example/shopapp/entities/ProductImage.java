@@ -12,6 +12,8 @@ import lombok.experimental.FieldDefaults;
 @Entity
 @Table(name = "product_images")
 public class ProductImage {
+    public static final Integer MAX_IMAGE_PER_PRODUCT = 5;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
