@@ -3,6 +3,7 @@ package com.example.shopapp.controllers;
 import com.example.shopapp.dtos.ResponseDTO;
 import com.example.shopapp.dtos.UserDTO;
 import com.example.shopapp.dtos.UserLoginDTO;
+import com.example.shopapp.services.user.IUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RequestMapping("${api.prefix}/users")
 public class UserController {
+    private final IUserService userService;
+
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody UserDTO userDTO, BindingResult bindingResult) {
         ResponseDTO responseDTO = new ResponseDTO();
@@ -36,7 +39,9 @@ public class UserController {
                 return ResponseEntity.badRequest().body(responseDTO);
             }
 
+            responseDTO.setData(userService.register(userDTO));
             responseDTO.setMessage("Register successfully");
+
             return ResponseEntity.ok(responseDTO);
         }
         catch(Exception e){

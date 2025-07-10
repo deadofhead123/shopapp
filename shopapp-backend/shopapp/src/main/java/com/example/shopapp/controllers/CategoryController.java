@@ -2,7 +2,7 @@ package com.example.shopapp.controllers;
 
 import com.example.shopapp.dtos.CategoryDTO;
 import com.example.shopapp.dtos.ResponseDTO;
-import com.example.shopapp.services.category.CategoryService;
+import com.example.shopapp.services.category.ICategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RequestMapping("${api.prefix}/categories")
 public class CategoryController {
-    private final CategoryService categoryService;
+    private final ICategoryService categoryService;
 
     @GetMapping("")
     public ResponseEntity<?> getAllCategories() {

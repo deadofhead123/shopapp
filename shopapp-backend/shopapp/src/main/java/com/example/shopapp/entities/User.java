@@ -1,14 +1,14 @@
 package com.example.shopapp.entities;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Date;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class User extends BaseEntity {
@@ -32,7 +32,7 @@ public class User extends BaseEntity {
     Boolean isActive;
 
     @Column(name = "date_of_birth")
-    Date dateOfBirth;
+    String dateOfBirth;
 
     @Column(name = "facebook_account_id")
     Integer facebookAccountId;
