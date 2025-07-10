@@ -53,7 +53,7 @@ public class ProductController {
         }
     }
 
-    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "")
     public ResponseEntity<?> createProduct(@Valid @ModelAttribute ProductDTO productDTO, BindingResult bindingResult) {
         ResponseDTO responseDTO = new ResponseDTO();
 
@@ -66,10 +66,22 @@ public class ProductController {
                                 collect(Collectors.toList()));
                 return ResponseEntity.badRequest().body(responseDTO);
             }
+            responseDTO.setData(productService.createProduct(productDTO));
+            return ResponseEntity.ok(responseDTO);
+        }
+        catch(Exception e){
+            responseDTO.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
+        }
+    }
 
-            Product newProduct = productService.createProduct(productDTO);
+    @PostMapping(value = "/uploads/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> uploadImage(@PathVariable("id") Long productId, List<MultipartFile> files){
+        ResponseDTO responseDTO = new ResponseDTO();
 
-            List<MultipartFile> files = productDTO.getFiles();
+        try{
+            Product existingProduct = productService.getProductById(productId);
+            List<ProductImage> productImages = new ArrayList<>();
             files = files == null ? new ArrayList<>() : files;
 
             for(MultipartFile file : files){
@@ -91,10 +103,11 @@ public class ProductController {
                 String thumbnailSingle = saveImage(file);
                 ProductImage productImage = productService.createProductImage(ProductImageDTO.builder()
                         .imageUrl(thumbnailSingle)
-                        .productId(newProduct.getId()).build());
+                        .productId(existingProduct.getId()).build());
+                productImages.add(productImage);
             }
 
-            responseDTO.setData(newProduct);
+            responseDTO.setData(productImages);
             return ResponseEntity.ok(responseDTO);
         }
         catch(Exception e){

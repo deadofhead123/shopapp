@@ -39,8 +39,8 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public ProductDTO getProductById(Long productId) {
-        return productConverter.convertToDTO(productRepository.findById(productId).get());
+    public Product getProductById(Long productId) {
+        return productRepository.findById(productId).get();
     }
 
     @Override

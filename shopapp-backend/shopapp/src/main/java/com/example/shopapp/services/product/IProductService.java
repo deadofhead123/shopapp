@@ -10,7 +10,7 @@ import org.springframework.data.domain.PageRequest;
 public interface IProductService {
     Product createProduct(ProductDTO productDTO);
 
-    ProductDTO getProductById(Long productId);
+    Product getProductById(Long productId);
     Page<ProductDTO> getAllProducts(PageRequest request);
 
     ProductDTO updateProduct(Long productId, ProductDTO productDTO);
