@@ -3,8 +3,10 @@ package com.example.shopapp.models.dtos;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Min;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -12,23 +14,23 @@ import lombok.*;
 @Setter
 public class OrderDetailDTO {
     @JsonProperty("order_id")
-    @Min(value=1, message = "Order's ID must be > 0")
-    private Long orderId;
+    @Min(value = 1, message = "Order's ID must be > 0")
+    Long orderId;
 
-    @Min(value=1, message = "Product's ID must be > 0")
+    @Min(value = 1, message = "Product's ID must be > 0")
     @JsonProperty("product_id")
-    private Long productId;
+    Long productId;
 
-    @Min(value=0, message = "Product's ID must be >= 0")
-    private Long price;
+    @Min(value = 0, message = "Product's ID must be >= 0")
+    Float price;
 
-    @Min(value=1, message = "number_of_products must be >= 1")
+    @Min(value = 1, message = "number_of_products must be >= 1")
     @JsonProperty("number_of_products")
-    private int numberOfProducts;
+    int numberOfProducts;
 
-    @Min(value=0, message = "total_money must be >= 0")
+    @Min(value = 0, message = "total_money must be >= 0")
     @JsonProperty("total_money")
-    private int totalMoney;
+    Float totalMoney;
 
-    private String color;
+    String color;
 }
