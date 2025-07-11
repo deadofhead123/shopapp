@@ -1,13 +1,14 @@
 package com.example.shopapp.controllers;
 
 import com.example.shopapp.constant.SystemConstant;
-import com.example.shopapp.models.dtos.ProductDTO;
-import com.example.shopapp.models.dtos.ProductImageDTO;
-import com.example.shopapp.models.dtos.ResponseDTO;
 import com.example.shopapp.entities.Product;
 import com.example.shopapp.entities.ProductImage;
 import com.example.shopapp.exceptions.InvalidParamException;
+import com.example.shopapp.models.dtos.ProductDTO;
+import com.example.shopapp.models.dtos.ProductImageDTO;
+import com.example.shopapp.models.dtos.ResponseDTO;
 import com.example.shopapp.services.product.IProductService;
+import com.github.javafaker.Faker;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -162,9 +163,7 @@ public class ProductController {
                                 collect(Collectors.toList()));
                 return ResponseEntity.badRequest().body(responseDTO);
             }
-
             responseDTO.setData(productService.updateProduct(productId, productDTO));
-
             return ResponseEntity.ok(responseDTO);
         }
         catch(Exception e){
@@ -183,6 +182,62 @@ public class ProductController {
             return ResponseEntity.ok(responseDTO);
         }
         catch(Exception e){
+            responseDTO.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
+        }
+    }
+
+//    @PostMapping("/generateFakeProducts")
+//    public ResponseEntity<String> generateFakeProducts() {
+//        Faker faker = new Faker();
+//        for (int i = 0; i < 100; i++) {
+//            String productName = faker.commerce().productName();
+//            if(productService.existsByName(productName)) {
+//                continue;
+//            }
+//            ProductDTO productDTO = ProductDTO.builder()
+//                    .name(productName)
+//                    .price((float)faker.number().numberBetween(10, 90_000_000))
+//                    .description(faker.lorem().sentence())
+//                    .thumbnail("")
+//                    .categoryId((long)faker.number().numberBetween(3, 8))
+//                    .build();
+//            try {
+//                productService.createProduct(productDTO);
+//            } catch (Exception e) {
+//                return ResponseEntity.badRequest().body(e.getMessage());
+//            }
+//        }
+//        return ResponseEntity.ok("Fake Products created successfully");
+//    }
+
+    // A tool used to fake data of an object: javafaker
+    @PostMapping("/fakeProductsGenerating")
+    public ResponseEntity<?> fakeProductsGenerating() {
+        ResponseDTO responseDTO = new ResponseDTO();
+
+        try{
+            Faker faker = new Faker();
+
+            for(int i = 1 ; i <= 200 ; i++){
+                String productName = faker.commerce().productName();
+                if(productService.existsByName(productName)){
+                    continue;
+                }
+                ProductDTO newProduct = ProductDTO
+                        .builder()
+                        .name(productName)
+                        .price((float)faker.number().randomDouble(4, 1, 90_000_000))
+                        .thumbnail("")
+                        .description(faker.lorem().sentence())
+                        .categoryId(faker.number().numberBetween(3L, 10L))
+                        .build();
+                productService.createProduct(newProduct);
+            }
+            responseDTO.setMessage("Generate all product successfully");
+            return ResponseEntity.ok(responseDTO);
+        }
+        catch (Exception e){
             responseDTO.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
         }

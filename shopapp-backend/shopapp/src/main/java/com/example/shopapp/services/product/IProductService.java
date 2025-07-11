@@ -10,12 +10,10 @@ import org.springframework.data.domain.PageRequest;
 
 public interface IProductService {
     Product createProduct(ProductDTO productDTO);
-
     Product getProductById(Long productId);
     Page<ProductResponse> getAllProducts(PageRequest request);
-
     ProductDTO updateProduct(Long productId, ProductDTO productDTO);
     Boolean deleteProduct(Long productId);
-
     ProductImage createProductImage(ProductImageDTO productImageDTO);
+    boolean existsByName(String name);
 }

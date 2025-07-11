@@ -93,4 +93,9 @@ public class ProductService implements IProductService{
 
         return productImageRepository.save(newProductImage);
     }
+
+    @Override
+    public boolean existsByName(String name) {
+        return productRepository.existsByName(name);
+    }
 }
