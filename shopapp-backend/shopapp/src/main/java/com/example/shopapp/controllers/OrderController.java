@@ -40,13 +40,26 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/{user_id}") // Thêm biến đường dẫn "user_id"
+    @GetMapping("/user/{user_id}") // Thêm biến đường dẫn "user_id"
     //GET http://localhost:8088/api/v1/orders/4
-    public ResponseEntity<?> getOrders(@Valid @PathVariable("user_id") Long userId) {
+    public ResponseEntity<?> getOrdersByUserId(@Valid @PathVariable("user_id") Long userId) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             responseDTO.setMessage("Orders with user's id = " + userId);
-            responseDTO.setData(orderService.getOrderByUserId(userId));
+            responseDTO.setData(orderService.findByUserId(userId));
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}") // Thêm biến đường dẫn "user_id"
+    //GET http://localhost:8088/api/v1/orders/4
+    public ResponseEntity<?> getOrders(@Valid @PathVariable("id") Long orderId) {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            responseDTO.setMessage("Order with id = " + orderId);
+            responseDTO.setData(orderService.findById(orderId));
             return ResponseEntity.ok(responseDTO);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

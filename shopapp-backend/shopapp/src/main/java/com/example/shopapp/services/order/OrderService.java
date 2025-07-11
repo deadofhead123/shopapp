@@ -42,7 +42,7 @@ public class OrderService implements IOrderService{
     }
 
     @Override
-    public OrderResponse getOrderById(Long orderId) {
+    public OrderResponse findById(Long orderId) {
         return orderConverter.convertToResponse(
                 orderRepository.findById(orderId)
                                 .orElseThrow(() -> new DataNotFoundException("Cannot find order with id = " + orderId))
@@ -74,7 +74,7 @@ public class OrderService implements IOrderService{
     }
 
     @Override
-    public List<OrderResponse> getOrderByUserId(Long userId) {
+    public List<OrderResponse> findByUserId(Long userId) {
         List<Order> orders = orderRepository.findByUserId(userId);
         return orders.stream().map(orderConverter::convertToResponse).collect(Collectors.toList());
     }

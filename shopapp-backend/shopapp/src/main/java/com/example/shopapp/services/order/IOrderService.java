@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface IOrderService {
     OrderResponse createOrder(OrderDTO orderDTO);
-    OrderResponse getOrderById(Long orderId);
+    OrderResponse findById(Long orderId);
     OrderResponse updateOrder(Long orderId, OrderDTO orderDTO);
     Boolean deleteOrder(Long orderId);
-    List<OrderResponse> getOrderByUserId(Long userId);
+    List<OrderResponse> findByUserId(Long userId);
 }
