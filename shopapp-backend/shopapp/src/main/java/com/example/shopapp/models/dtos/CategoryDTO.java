@@ -1,4 +1,4 @@
-package com.example.shopapp.dtos;
+package com.example.shopapp.models.dtos;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AccessLevel;

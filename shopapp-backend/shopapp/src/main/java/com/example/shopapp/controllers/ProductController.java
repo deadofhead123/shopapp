@@ -1,9 +1,9 @@
 package com.example.shopapp.controllers;
 
 import com.example.shopapp.constant.SystemConstant;
-import com.example.shopapp.dtos.ProductDTO;
-import com.example.shopapp.dtos.ProductImageDTO;
-import com.example.shopapp.dtos.ResponseDTO;
+import com.example.shopapp.models.dtos.ProductDTO;
+import com.example.shopapp.models.dtos.ProductImageDTO;
+import com.example.shopapp.models.dtos.ResponseDTO;
 import com.example.shopapp.entities.Product;
 import com.example.shopapp.entities.ProductImage;
 import com.example.shopapp.exceptions.InvalidParamException;
@@ -11,6 +11,7 @@ import com.example.shopapp.services.product.IProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -39,12 +40,15 @@ public class ProductController {
 
     @GetMapping("")
     public ResponseEntity<?> getAllProducts(
-            @RequestParam(name = "limit") Integer limit,
-            @RequestParam(name = "page") Integer page) {
+            @RequestParam(name = "limit", defaultValue = "6") Integer limit,
+            @RequestParam(name = "page", defaultValue = "0") Integer page,
+            @RequestParam(name = "sort", defaultValue = "name") String sortField,
+            @RequestParam(name = "direction", defaultValue = "asc") String direction) {
         ResponseDTO responseDTO = new ResponseDTO();
 
         try{
-            responseDTO.setData(productService.getAllProducts(PageRequest.of(page, limit)));
+            Sort sort = Sort.by(Sort.Direction.valueOf(direction), sortField);
+            responseDTO.setData(productService.getAllProducts(PageRequest.of(page, limit, sort)));
 
             return ResponseEntity.ok(responseDTO);
         }

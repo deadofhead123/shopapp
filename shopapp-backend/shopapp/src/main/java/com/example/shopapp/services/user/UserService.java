@@ -1,8 +1,8 @@
 package com.example.shopapp.services.user;
 
 import com.example.shopapp.components.converter.UserConverter;
-import com.example.shopapp.dtos.UserDTO;
-import com.example.shopapp.dtos.UserLoginDTO;
+import com.example.shopapp.models.dtos.UserDTO;
+import com.example.shopapp.models.dtos.UserLoginDTO;
 import com.example.shopapp.entities.Role;
 import com.example.shopapp.entities.User;
 import com.example.shopapp.exceptions.DataNotFoundException;

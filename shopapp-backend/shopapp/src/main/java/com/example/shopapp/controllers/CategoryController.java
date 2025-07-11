@@ -1,7 +1,7 @@
 package com.example.shopapp.controllers;
 
-import com.example.shopapp.dtos.CategoryDTO;
-import com.example.shopapp.dtos.ResponseDTO;
+import com.example.shopapp.models.dtos.CategoryDTO;
+import com.example.shopapp.models.dtos.ResponseDTO;
 import com.example.shopapp.services.category.ICategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

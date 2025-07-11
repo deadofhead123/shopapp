@@ -1,6 +1,6 @@
 package com.example.shopapp.components.converter;
 
-import com.example.shopapp.dtos.UserDTO;
+import com.example.shopapp.models.dtos.UserDTO;
 import com.example.shopapp.entities.User;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;

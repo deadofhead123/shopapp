@@ -1,6 +1,6 @@
 package com.example.shopapp.services.category;
 
-import com.example.shopapp.dtos.CategoryDTO;
+import com.example.shopapp.models.dtos.CategoryDTO;
 import com.example.shopapp.entities.Category;
 import com.example.shopapp.repositories.CategoryRepository;
 import jakarta.transaction.Transactional;

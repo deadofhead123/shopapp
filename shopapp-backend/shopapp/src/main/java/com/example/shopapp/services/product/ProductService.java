@@ -1,13 +1,14 @@
 package com.example.shopapp.services.product;
 
 import com.example.shopapp.components.converter.ProductConverter;
-import com.example.shopapp.dtos.ProductDTO;
-import com.example.shopapp.dtos.ProductImageDTO;
+import com.example.shopapp.models.dtos.ProductDTO;
+import com.example.shopapp.models.dtos.ProductImageDTO;
 import com.example.shopapp.entities.Category;
 import com.example.shopapp.entities.Product;
 import com.example.shopapp.entities.ProductImage;
 import com.example.shopapp.exceptions.DataNotFoundException;
 import com.example.shopapp.exceptions.InvalidParamException;
+import com.example.shopapp.models.responses.ProductResponse;
 import com.example.shopapp.repositories.CategoryRepository;
 import com.example.shopapp.repositories.ProductImageRepository;
 import com.example.shopapp.repositories.ProductRepository;
@@ -44,9 +45,9 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public Page<ProductDTO> getAllProducts(PageRequest request) {
+    public Page<ProductResponse> getAllProducts(PageRequest request) {
         Page<Product> products = productRepository.findAll(request);
-        return products.map(productConverter::convertToDTO);
+        return products.map(productConverter::convertToResponse);
     }
 
     @Override

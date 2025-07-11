@@ -1,6 +1,6 @@
 package com.example.shopapp.controllers;
 
-import com.example.shopapp.dtos.OrderDetailDTO;
+import com.example.shopapp.models.dtos.OrderDetailDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

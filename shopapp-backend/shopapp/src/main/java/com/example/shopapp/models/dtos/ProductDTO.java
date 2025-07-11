@@ -1,4 +1,4 @@
-package com.example.shopapp.dtos;
+package com.example.shopapp.models.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Max;
