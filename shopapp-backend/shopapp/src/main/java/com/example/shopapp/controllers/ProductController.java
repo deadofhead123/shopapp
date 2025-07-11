@@ -212,8 +212,8 @@ public class ProductController {
 //    }
 
     // A tool used to fake data of an object: javafaker
-    @PostMapping("/fakeProductsGenerating")
-    public ResponseEntity<?> fakeProductsGenerating() {
+//    @PostMapping("/fakeProductsGenerating")
+    private ResponseEntity<?> fakeProductsGenerating() {
         ResponseDTO responseDTO = new ResponseDTO();
 
         try{

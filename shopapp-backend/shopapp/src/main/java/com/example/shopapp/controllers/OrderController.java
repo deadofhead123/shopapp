@@ -2,31 +2,39 @@ package com.example.shopapp.controllers;
 
 
 import com.example.shopapp.models.dtos.OrderDTO;
+import com.example.shopapp.models.dtos.ResponseDTO;
+import com.example.shopapp.services.order.IOrderService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("${api.prefix}/orders")
+@RequiredArgsConstructor
 public class OrderController {
+    private final IOrderService orderService;
+
     @PostMapping("")
     public ResponseEntity<?> createOrder(
             @Valid @RequestBody OrderDTO orderDTO,
             BindingResult result
     ) {
+        ResponseDTO responseDTO = new ResponseDTO();
+
         try {
             if (result.hasErrors()) {
-                List<String> errorMessages = result.getFieldErrors()
+                responseDTO.setErrors(result.getFieldErrors()
                         .stream()
                         .map(FieldError::getDefaultMessage)
-                        .toList();
-                return ResponseEntity.badRequest().body(errorMessages);
+                        .toList());
+                return ResponseEntity.badRequest().body(responseDTO);
             }
-            return ResponseEntity.ok("createOrder successfully");
+            responseDTO.setData(orderService.createOrder(orderDTO));
+            responseDTO.setMessage("createOrder successfully");
+            return ResponseEntity.ok(responseDTO);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -35,8 +43,11 @@ public class OrderController {
     @GetMapping("/{user_id}") // Thêm biến đường dẫn "user_id"
     //GET http://localhost:8088/api/v1/orders/4
     public ResponseEntity<?> getOrders(@Valid @PathVariable("user_id") Long userId) {
+        ResponseDTO responseDTO = new ResponseDTO();
         try {
-            return ResponseEntity.ok("Lấy ra danh sách order từ user_id");
+            responseDTO.setMessage("Orders with user's id = " + userId);
+            responseDTO.setData(orderService.getOrderByUserId(userId));
+            return ResponseEntity.ok(responseDTO);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -47,13 +58,37 @@ public class OrderController {
     //công việc của admin
     public ResponseEntity<?> updateOrder(
             @Valid @PathVariable long id,
-            @Valid @RequestBody OrderDTO orderDTO) {
-        return ResponseEntity.ok("Cập nhật thông tin 1 order");
+            @Valid @RequestBody OrderDTO orderDTO,
+            BindingResult result) {
+        ResponseDTO responseDTO = new ResponseDTO();
+
+        try {
+            if (result.hasErrors()) {
+                responseDTO.setErrors(result.getFieldErrors()
+                        .stream()
+                        .map(FieldError::getDefaultMessage)
+                        .toList());
+                return ResponseEntity.badRequest().body(responseDTO);
+            }
+            responseDTO.setData(orderService.updateOrder(id, orderDTO));
+            responseDTO.setMessage("Order updated successfully");
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
+    //xóa mềm => cập nhật trường active = false
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteOrder(@Valid @PathVariable Long id) {
-        //xóa mềm => cập nhật trường active = false
-        return ResponseEntity.ok("Order deleted successfully.");
+    public ResponseEntity<?> deleteOrder(@Valid @PathVariable Long id) {
+        ResponseDTO responseDTO = new ResponseDTO();
+
+        try {
+            responseDTO.setData(orderService.deleteOrder(id));
+            responseDTO.setMessage("Order deleted successfully.");
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
