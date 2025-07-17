@@ -60,7 +60,7 @@ public class UserController {
                 return ResponseEntity.badRequest().body(responseDTO);
             }
 
-            responseDTO.setData(userLoginDTO);
+            responseDTO.setData(userService.login(userLoginDTO));
             responseDTO.setMessage("Login successfully");
             return ResponseEntity.ok(responseDTO);
         }
