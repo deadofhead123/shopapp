@@ -1,5 +1,5 @@
 server:
-  port: 8090
+  port: 8088
 spring:
   application:
     name: shopapp
@@ -24,4 +24,4 @@ api:
   prefix: api/v1
 jwt:
   expiration: 2592000
-  secretKey: nJDco+uZAcHpF6BAk3PKl2Z5cxPCe7XhpKypZ60eurYkE9TPkYtJDuf4iYYz5DN8
+  secretKey: g/7u3CvzbtD085pTKwZ67oPOkdAVs8ERgtff8bpc96Om6dTdEFdBjrNJJsbPiGTd

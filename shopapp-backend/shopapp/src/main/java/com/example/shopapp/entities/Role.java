@@ -10,6 +10,9 @@ import lombok.experimental.FieldDefaults;
 @Entity
 @Table(name = "roles")
 public class Role {
+    public static final String ADMIN = "ADMIN";
+    public static final String USER = "USER";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;

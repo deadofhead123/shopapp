@@ -1,5 +1,7 @@
 package com.example.shopapp.components.other;
 
+import com.example.shopapp.configurations.JwtTokenUtil;
+import com.example.shopapp.entities.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,48 +10,72 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
 
+// This class processes if a request needs tokens to execute
 @Component
 @RequiredArgsConstructor
 public class JwtTokenFilter extends OncePerRequestFilter {
     @Value("${api.prefix}")
     private String apiPrefix;
 
+    private final JwtTokenUtil jwtTokenUtil;
+    private final UserDetailsService userDetailsService;
+
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
-        // Check if this request needs a token
-        if(isBypassToken(request)){
-            filterChain.doFilter(request, response); // Continue to execute request. If you don't have this method, the server returns "200 OK" immediately (no executing request)
-        }
-
-        // Get token to authenticate and authorize
-        String header = request.getHeader("Authorization");
-        if(header != null && header.contains("Bearer")){
-            String token = header.substring(7);
-            if(header != null && SecurityContextHolder.getContext().getAuthentication() != null){ // User logged in, Spring Security saved information
-                token = header.substring(7);
+        try{
+            if(isBypassToken(request)){
+                filterChain.doFilter(request,response);
+                return;
             }
-        }
 
+            String header = request.getHeader("Authorization");
+            if(header == null || !header.startsWith("Bearer ")){
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"You must provide token for using this request");
+                return;
+            }
+            String token = header.substring(7);
+            String phoneNumber = jwtTokenUtil.extractPhoneNumber(token);
+            if(phoneNumber != null && SecurityContextHolder.getContext().getAuthentication() == null){
+                User userDetails = (User) userDetailsService.loadUserByUsername(phoneNumber);
+                if(jwtTokenUtil.validateToken(token,userDetails)){
+                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                            phoneNumber,
+                            null,
+                            userDetails.getAuthorities()
+                    );
+                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                }
+            }
+            filterChain.doFilter(request, response);
+        }
+        catch (Exception ex){
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"Invalid token");
+        }
     }
 
+    // Request don't need token: login, register, get categories, get products
     private boolean isBypassToken(HttpServletRequest request){
-        List<Pair<String, String>> bypassRequests = List.of(
-                Pair.of(String.format("/%s/users/login", apiPrefix), "POST"),
+        List<Pair<String, String>> bypasses = List.of(
+                Pair.of(String.format("/%s/users/login", apiPrefix), "POST"),    // path: api/v1/users/login
                 Pair.of(String.format("/%s/users/register", apiPrefix), "POST"),
-                Pair.of(String.format("/%s/products", apiPrefix), "GET"),
-                Pair.of(String.format("/%s/categories", apiPrefix), "GET")
+                Pair.of(String.format("/%s/categories", apiPrefix), "GET"),
+                Pair.of(String.format("/%s/products", apiPrefix), "GET")
         );
-        for(Pair<String, String> item : bypassRequests){
-            if(item.getKey().equals(request.getServletPath()) && item.getValue().equals(request.getMethod())){
+        for(Pair<String, String> bypass : bypasses){
+            if(request.getServletPath().contains(bypass.getKey()) && request.getMethod().contains(bypass.getValue())){
                 return true;
             }
         }
