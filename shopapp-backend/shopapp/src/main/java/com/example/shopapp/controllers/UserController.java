@@ -46,7 +46,7 @@ public class UserController {
         }
         catch(Exception e){
             responseDTO.setMessage(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseDTO);
         }
     }
 

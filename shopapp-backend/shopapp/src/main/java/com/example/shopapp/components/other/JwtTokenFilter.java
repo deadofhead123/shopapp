@@ -35,31 +35,32 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
         try{
-            if(isBypassToken(request)){
-                filterChain.doFilter(request,response);
+            if(isBypassToken(request)) {
+                filterChain.doFilter(request, response); //enable bypass
                 return;
             }
-
-            String header = request.getHeader("Authorization");
-            if(header == null || !header.startsWith("Bearer ")){
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"You must provide token for using this request");
+            final String authHeader = request.getHeader("Authorization");
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
                 return;
             }
-            String token = header.substring(7);
-            String phoneNumber = jwtTokenUtil.extractPhoneNumber(token);
-            if(phoneNumber != null && SecurityContextHolder.getContext().getAuthentication() == null){
+            final String token = authHeader.substring(7);
+            final String phoneNumber = jwtTokenUtil.extractPhoneNumber(token);
+            if (phoneNumber != null
+                    && SecurityContextHolder.getContext().getAuthentication() == null) {
                 User userDetails = (User) userDetailsService.loadUserByUsername(phoneNumber);
-                if(jwtTokenUtil.validateToken(token,userDetails)){
-                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                            phoneNumber,
-                            null,
-                            userDetails.getAuthorities()
-                    );
+                if(jwtTokenUtil.validateToken(token, userDetails)) {
+                    UsernamePasswordAuthenticationToken authenticationToken =
+                            new UsernamePasswordAuthenticationToken(
+                                    userDetails,
+                                    null,
+                                    userDetails.getAuthorities()
+                            );
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 }
             }
-            filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response); //enable bypass
         }
         catch (Exception ex){
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"Invalid token");

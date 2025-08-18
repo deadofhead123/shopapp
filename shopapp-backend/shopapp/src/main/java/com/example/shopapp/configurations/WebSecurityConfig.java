@@ -1,6 +1,7 @@
 package com.example.shopapp.configurations;
 
 import com.example.shopapp.components.other.JwtTokenFilter;
+import com.example.shopapp.entities.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -31,29 +32,29 @@ public class WebSecurityConfig {
                                     String.format("%s/users/register", apiPrefix)
                             ).permitAll()
                             .requestMatchers(
-                                    HttpMethod.GET, String.format("%s/categories/**", apiPrefix)).permitAll()
+                                    HttpMethod.GET, String.format("%s/categories?**", apiPrefix)).permitAll()
                             .requestMatchers(
-                                    HttpMethod.POST, String.format("%s/categories/**", apiPrefix)).hasRole("ADMIN")
+                                    HttpMethod.POST, String.format("%s/categories/**", apiPrefix)).hasRole(Role.ADMIN)
                             .requestMatchers(
-                                    HttpMethod.PUT, String.format("%s/categories/**", apiPrefix)).hasRole("ADMIN")
+                                    HttpMethod.PUT, String.format("%s/categories/**", apiPrefix)).hasRole(Role.ADMIN)
                             .requestMatchers(
-                                    HttpMethod.DELETE, String.format("%s/categories/**", apiPrefix)).hasRole("ADMIN")
+                                    HttpMethod.DELETE, String.format("%s/categories/**", apiPrefix)).hasRole(Role.ADMIN)
                             .requestMatchers(
-                                    HttpMethod.GET, String.format("%s/products/**", apiPrefix)).permitAll()
+                                    HttpMethod.GET, String.format("%s/products**", apiPrefix)).permitAll()
                             .requestMatchers(
-                                    HttpMethod.POST, String.format("%s/products/**", apiPrefix)).hasRole("ADMIN")
+                                    HttpMethod.POST, String.format("%s/products/**", apiPrefix)).hasRole(Role.ADMIN)
                             .requestMatchers(
-                                    HttpMethod.PUT, String.format("%s/products/**", apiPrefix)).hasRole("ADMIN")
+                                    HttpMethod.PUT, String.format("%s/products/**", apiPrefix)).hasRole(Role.ADMIN)
                             .requestMatchers(
-                                    HttpMethod.DELETE, String.format("%s/products/**", apiPrefix)).hasRole("ADMIN")
+                                    HttpMethod.DELETE, String.format("%s/products/**", apiPrefix)).hasRole(Role.ADMIN)
                             .requestMatchers(
-                                    HttpMethod.GET, String.format("%s/orders/**", apiPrefix)).hasAnyRole("USER", "ADMIN")
+                                    HttpMethod.GET, String.format("%s/orders/**", apiPrefix)).hasAnyRole(Role.USER, Role.ADMIN)
                             .requestMatchers(
-                                    HttpMethod.POST, String.format("%s/orders/**", apiPrefix)).hasRole("USER")
+                                    HttpMethod.POST, String.format("%s/orders/**", apiPrefix)).hasRole(Role.USER)
                             .requestMatchers(
-                                    HttpMethod.PUT, String.format("%s/orders/**", apiPrefix)).hasRole("ADMIN")
+                                    HttpMethod.PUT, String.format("%s/orders/**", apiPrefix)).hasRole(Role.ADMIN)
                             .requestMatchers(
-                                    HttpMethod.DELETE, String.format("%s/orders/**", apiPrefix)).hasRole("ADMIN")
+                                    HttpMethod.DELETE, String.format("%s/orders/**", apiPrefix)).hasRole(Role.ADMIN)
                             .anyRequest().authenticated();
                 })
                 .csrf(AbstractHttpConfigurer::disable);

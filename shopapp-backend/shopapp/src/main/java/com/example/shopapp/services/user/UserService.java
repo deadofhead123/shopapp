@@ -5,6 +5,7 @@ import com.example.shopapp.configurations.JwtTokenUtil;
 import com.example.shopapp.entities.Role;
 import com.example.shopapp.entities.User;
 import com.example.shopapp.exceptions.DataNotFoundException;
+import com.example.shopapp.exceptions.PermissionDenyException;
 import com.example.shopapp.models.dtos.UserDTO;
 import com.example.shopapp.models.dtos.UserLoginDTO;
 import com.example.shopapp.repositories.RoleRepository;
@@ -38,6 +39,11 @@ public class UserService implements IUserService{
             throw new DataIntegrityViolationException("Phone number is already in use");
         }
 
+        Role role = roleRepository.findById(userDTO.getRoleId()).orElseThrow(() -> new DataNotFoundException("Role not found"));
+        if(role.getName().equals(Role.ADMIN)){
+            throw new PermissionDenyException("You cannot register an admin account");
+        }
+
         User newUser = User.builder()
                 .fullName(userDTO.getFullName())
                 .phoneNumber(userDTO.getPhoneNumber())
@@ -49,7 +55,6 @@ public class UserService implements IUserService{
                 .isActive(true)
                 .build();
 
-        Role role = roleRepository.findById(userDTO.getRoleId()).orElseThrow(() -> new DataNotFoundException("Role not found"));
         newUser.setRole(role);
 
         if(userDTO.getFacebookAccountId() == 0 && userDTO.getGoogleAccountId() == 0){
