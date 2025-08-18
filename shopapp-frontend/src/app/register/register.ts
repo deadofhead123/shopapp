@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { HeaderComponent } from '../header/header';
 import { FooterComponent } from '../footer/footer';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
+import { NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-register',
@@ -14,6 +15,8 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './register.scss'
 })
 export class RegisterComponent {
+  @ViewChild('registerForm') registerForm !: NgForm; // ! có nghĩa là chắc chắn registerForm tồn tại (ta đang dùng nó bên HTML)
+
   phone: string;
   password: string;
   retypePassword: string;
@@ -47,5 +50,33 @@ export class RegisterComponent {
             date of birth: ${this.dateOfBirth},
             isAccepted: ${this.isAccepted}
       `);
+  }
+
+  checkPasswordMatch() {
+    if (this.password !== this.retypePassword) {
+      this.registerForm.form.controls['retypePassword'].setErrors({ 'passwordMismatch': true });
+    }
+    else {
+      this.registerForm.form.controls['retypePassword'].setErrors(null);
+    }
+  }
+
+  checkAge() {
+    if (this.dateOfBirth) {
+      let dob = new Date(this.dateOfBirth);
+      let now = new Date();
+      let age = now.getFullYear() - dob.getFullYear();
+      const monthDiff = now.getMonth() - dob.getMonth();
+      if (monthDiff < 0 || (monthDiff == 0 && now.getDate() - dob.getDate() < 0)) {
+        age--;
+      }
+
+      if (age < 18) {
+        this.registerForm.controls['dateOfBirth'].setErrors({ 'invalidAge': true });
+      }
+      else {
+        this.registerForm.controls['dateOfBirth'].setErrors(null);
+      }
+    }
   }
 }
