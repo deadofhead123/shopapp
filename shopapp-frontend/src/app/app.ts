@@ -6,6 +6,7 @@ import { OrderConfirmComponent } from './order-confirm/order-confirm';
 import { LoginComponent } from './login/login';
 import { RegisterComponent } from './register/register';
 import { DetailProductComponent } from './detail-product/detail-product';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,7 @@ import { DetailProductComponent } from './detail-product/detail-product';
     LoginComponent,
     RegisterComponent,
     DetailProductComponent,
+    FormsModule
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss'
