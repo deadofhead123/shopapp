@@ -3,13 +3,14 @@ import { HeaderComponent } from '../header/header';
 import { FooterComponent } from '../footer/footer';
 import { FormsModule, NgForm } from '@angular/forms';
 import { NgFor } from '@angular/common';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-register',
   imports: [
-    HeaderComponent,
     FooterComponent,
-    FormsModule
+    FormsModule,
   ],
   templateUrl: './register.html',
   styleUrl: './register.scss'
@@ -25,7 +26,7 @@ export class RegisterComponent {
   dateOfBirth: Date;
   isAccepted: boolean;
 
-  constructor() {
+  constructor(private http: HttpClient, private router: Router) {
     this.phone = '';
     this.password = '';
     this.retypePassword = '';
@@ -34,6 +35,7 @@ export class RegisterComponent {
     this.dateOfBirth = new Date();
     this.dateOfBirth.setFullYear(this.dateOfBirth.getFullYear() - 18);
     this.isAccepted = true;
+
   }
 
   onPhoneChange() {
@@ -41,15 +43,45 @@ export class RegisterComponent {
   }
 
   register() {
-    alert(`Register successfully!
-            phone: ${this.phone},
-            password: ${this.password},
-            retypePassword: ${this.retypePassword},
-            full name: ${this.fullName},
-            address: ${this.address},
-            date of birth: ${this.dateOfBirth},
-            isAccepted: ${this.isAccepted}
-      `);
+    // alert(`Register successfully!
+    //         phone: ${this.phone},
+    //         password: ${this.password},
+    //         retypePassword: ${this.retypePassword},
+    //         full name: ${this.fullName},
+    //         address: ${this.address},
+    //         date of birth: ${this.dateOfBirth},
+    //         isAccepted: ${this.isAccepted}
+    //   `);
+
+    const registerInfo = {
+      "fullname": this.fullName,
+      "phone_number": this.phone,
+      "password": this.password,
+      "retypePassword": this.retypePassword,
+      "fullName": this.fullName,
+      "address": this.address,
+      "date_of_birth": this.dateOfBirth,
+      "facebook_account_id": 0,
+      "google_account_id": 0,
+      "role_id": 2
+    }
+    const url = "http://localhost:8088/api/v1/users/register";
+    const headers = new HttpHeaders({  // Có thể bỏ cái header này lúc gửi không?
+      'Content-Type': 'application/json',
+    });
+
+    this.http.post(url, registerInfo, { headers },)
+      .subscribe({
+        next: (response: any) => {
+          alert(`Register successfully\n`);
+        },
+        complete: () => {
+
+        },
+        error: (response: any) => {
+          alert(response.error.message);
+        }
+      })
   }
 
   checkPasswordMatch() {
