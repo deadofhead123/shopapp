@@ -5,8 +5,8 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { NgFor } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
-import { UserService } from '../service/user/user.service';
-import { RegisterDTO } from '../dtos/register.dto';
+import { UserService } from '../service/user/userService.service';
+import { RegisterDTO } from '../dtos/user/register.dto';
 
 @Component({
   selector: 'app-register',
@@ -20,7 +20,7 @@ import { RegisterDTO } from '../dtos/register.dto';
 export class RegisterComponent {
   @ViewChild('registerForm') registerForm !: NgForm; // ! có nghĩa là chắc chắn registerForm tồn tại (ta đang dùng nó bên HTML)
 
-  phone: string;
+  phoneNumber: string;
   password: string;
   retypePassword: string;
   fullName: string;
@@ -29,7 +29,7 @@ export class RegisterComponent {
   isAccepted: boolean;
 
   constructor(private http: HttpClient, private router: Router, private userService: UserService) {
-    this.phone = '';
+    this.phoneNumber = '';
     this.password = '';
     this.retypePassword = '';
     this.fullName = '';
@@ -40,13 +40,13 @@ export class RegisterComponent {
   }
 
   onPhoneChange() {
-    console.log(this.phone);
+    console.log(this.phoneNumber);
   }
 
   register() {
     const registerData: RegisterDTO = {
       "fullname": this.fullName,
-      "phone_number": this.phone,
+      "phone_number": this.phoneNumber,
       "password": this.password,
       "retypePassword": this.retypePassword,
       "address": this.address,

@@ -83,7 +83,7 @@ public class UserService implements IUserService{
         }
 
         // Authentication with Spring Security
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(phoneNumber, password);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(phoneNumber, password, user.getAuthorities()); // Phải có password để Spring Security kiểm tra xem có khớp với mật khẩu của user đó trong db không
         authenticationManager.authenticate(authenticationToken);
 
         // Generate token
