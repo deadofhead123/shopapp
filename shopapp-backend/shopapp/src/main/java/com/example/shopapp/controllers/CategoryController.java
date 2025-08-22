@@ -2,15 +2,20 @@ package com.example.shopapp.controllers;
 
 import com.example.shopapp.models.dtos.CategoryDTO;
 import com.example.shopapp.models.dtos.ResponseDTO;
+import com.example.shopapp.models.responses.UpdateCategoryResponse;
 import com.example.shopapp.services.category.ICategoryService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.LocaleResolver;
 
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @RestController
@@ -18,6 +23,8 @@ import java.util.stream.Collectors;
 @RequestMapping("${api.prefix}/categories")
 public class CategoryController {
     private final ICategoryService categoryService;
+    private final MessageSource messageSource;
+    private final LocaleResolver localeResolver;
 
     @GetMapping("")
     public ResponseEntity<?> getAllCategories() {
@@ -55,7 +62,10 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateCategory(@PathVariable("id") Long id, @Valid @RequestBody CategoryDTO categoryDTO, BindingResult bindingResult){
+    public ResponseEntity<?> updateCategory(@PathVariable("id") Long id,
+                                            @Valid @RequestBody CategoryDTO categoryDTO,
+                                            BindingResult bindingResult,
+                                            HttpServletRequest request){
         ResponseDTO responseDTO = new ResponseDTO();
 
         try{
@@ -64,10 +74,13 @@ public class CategoryController {
                 return ResponseEntity.badRequest().body(responseDTO);
             }
 
-            responseDTO.setData(categoryService.updateCategory(id, categoryDTO));
-            responseDTO.setMessage("Update category successfully!");
+            Locale locale = localeResolver.resolveLocale(request);
+            categoryService.updateCategory(id, categoryDTO);
+            UpdateCategoryResponse updateCategoryResponse = UpdateCategoryResponse.builder()
+                    .message(messageSource.getMessage("category.update_category.update_successfully", null, locale))
+                    .build();
 
-            return ResponseEntity.ok(responseDTO);
+            return ResponseEntity.ok(updateCategoryResponse);
         }
         catch (Exception e){
             responseDTO.setMessage(e.getMessage());
