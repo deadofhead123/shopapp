@@ -1,18 +1,19 @@
 import { Component } from '@angular/core';
+import { CurrencyPipe } from '../../shared/pipes/CurrencyPipe.pipe';
 import { HeaderComponent } from '../header/header';
 import { FooterComponent } from '../footer/footer';
-import { CurrencyPipe } from '../shared/pipes/CurrencyPipe.pipe';
 
 @Component({
-  selector: 'app-order',
+  selector: 'app-home',
   imports: [
+    CurrencyPipe,
     HeaderComponent,
     FooterComponent,
-    CurrencyPipe,
+
   ],
-  templateUrl: './order.html',
-  styleUrl: './order.scss'
+  templateUrl: './home.html',
+  styleUrl: './home.scss'
 })
-export class OrderComponent {
+export class HomeComponent {
 
 }

@@ -2,8 +2,9 @@ import { Component, ViewChild } from '@angular/core';
 import { HeaderComponent } from '../header/header';
 import { FooterComponent } from '../footer/footer';
 import { FormsModule, NgForm } from '@angular/forms';
-import { UserService } from '../service/user/userService.service';
-import { ResponseDTO } from '../dtos/response/response.dto';
+import { UserService } from '../../service/user/userService.service';
+import { ResponseDTO } from '../../dtos/response/response.dto';
+import { TokenService } from '../../service/token/token.service';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,10 @@ export class LoginComponent {
   phoneNumber: string;
   password: string;
 
-  constructor(private userService: UserService) {
+  constructor(
+    private userService: UserService,
+    private tokenService: TokenService,
+  ) {
     this.phoneNumber = '';
     this.password = '';
   }
@@ -32,8 +36,10 @@ export class LoginComponent {
       password: this.password
     };
     this.userService.login(loginDTO).subscribe({
-      next: (response: any) => {
-        alert(`Login successfully! Token: ` + response.data); // Give token
+      next: (response: LoginResponse) => {
+        const { token } = response; // Destructuring
+        alert(`Login successfully! Token: ` + token); // Give token
+        this.tokenService.setToken(token);
       },
       complete: () => {
 

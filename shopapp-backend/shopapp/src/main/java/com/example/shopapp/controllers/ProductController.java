@@ -1,5 +1,6 @@
 package com.example.shopapp.controllers;
 
+import com.example.shopapp.constant.MessageKeys;
 import com.example.shopapp.constant.SystemConstant;
 import com.example.shopapp.entities.Product;
 import com.example.shopapp.entities.ProductImage;
@@ -8,6 +9,7 @@ import com.example.shopapp.models.dtos.ProductDTO;
 import com.example.shopapp.models.dtos.ProductImageDTO;
 import com.example.shopapp.models.dtos.ResponseDTO;
 import com.example.shopapp.services.product.IProductService;
+import com.example.shopapp.utils.LocalizationUtil;
 import com.github.javafaker.Faker;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +40,7 @@ import java.util.stream.Collectors;
 public class ProductController {
     private final IProductService productService;
     private final String productImageDirectoryPrefix = "\\products";
+    private final LocalizationUtil localizationUtil;
 
     @GetMapping("")
     public ResponseEntity<?> getAllProducts(
@@ -90,7 +93,7 @@ public class ProductController {
 
             // Prevent upload more than MAX_IMAGE_PER_PRODUCT images (From request) -> reduce check time in server side
             if(files.size() > ProductImage.MAX_IMAGE_PER_PRODUCT){
-                throw new InvalidParamException("You can only upload up to " + ProductImage.MAX_IMAGE_PER_PRODUCT + " images");
+                throw new InvalidParamException(localizationUtil.getLocalizedMessage(MessageKeys.UPLOAD_IMAGES_MAX, ProductImage.MAX_IMAGE_PER_PRODUCT));
             }
 
             List<ProductImage> productImages = new ArrayList<>();
@@ -102,13 +105,13 @@ public class ProductController {
                 }
 
                 if(file.getSize() > SystemConstant.maxImageFileSize){
-                    responseDTO.setMessage("File is too large");
+                    responseDTO.setMessage(localizationUtil.getLocalizedMessage(MessageKeys.UPLOAD_IMAGES_FILE_LARGE));
                     return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(responseDTO);
                 }
 
                 String contentType = file.getContentType();
                 if(contentType == null || !contentType.startsWith("image/")){
-                    responseDTO.setMessage("This isn't an image");
+                    responseDTO.setMessage(localizationUtil.getLocalizedMessage(MessageKeys.UPLOAD_IMAGES_FILE_MUST_BE_IMAGE));
                     return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(responseDTO);
                 }
 
@@ -130,7 +133,7 @@ public class ProductController {
 
     public String saveImage(MultipartFile file) throws Exception {
         if(file.getOriginalFilename() == null){
-            throw new IOException("Invalid format image");
+            throw new IOException(localizationUtil.getLocalizedMessage(MessageKeys.UPLOAD_IMAGES_FILE_MUST_BE_IMAGE));
         }
 
         // Folder to save

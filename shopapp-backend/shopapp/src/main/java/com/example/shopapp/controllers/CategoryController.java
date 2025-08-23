@@ -1,21 +1,18 @@
 package com.example.shopapp.controllers;
 
+import com.example.shopapp.constant.MessageKeys;
 import com.example.shopapp.models.dtos.CategoryDTO;
 import com.example.shopapp.models.dtos.ResponseDTO;
-import com.example.shopapp.models.responses.UpdateCategoryResponse;
 import com.example.shopapp.services.category.ICategoryService;
-import jakarta.servlet.http.HttpServletRequest;
+import com.example.shopapp.utils.LocalizationUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.LocaleResolver;
 
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 @RestController
@@ -23,8 +20,7 @@ import java.util.stream.Collectors;
 @RequestMapping("${api.prefix}/categories")
 public class CategoryController {
     private final ICategoryService categoryService;
-    private final MessageSource messageSource;
-    private final LocaleResolver localeResolver;
+    private final LocalizationUtil localizationUtil;
 
     @GetMapping("")
     public ResponseEntity<?> getAllCategories() {
@@ -51,12 +47,12 @@ public class CategoryController {
             }
 
             responseDTO.setData(categoryService.createCategory(categoryDTO));
-            responseDTO.setMessage("Create a new category successfully!");
+            responseDTO.setMessage(localizationUtil.getLocalizedMessage(MessageKeys.INSERT_CATEGORY_SUCCESSFULLY));
 
             return ResponseEntity.ok(responseDTO);
         }
         catch (Exception e){
-            responseDTO.setMessage(e.getMessage());
+            responseDTO.setMessage(localizationUtil.getLocalizedMessage(MessageKeys.INSERT_CATEGORY_FAILED));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
         }
     }
@@ -64,8 +60,7 @@ public class CategoryController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCategory(@PathVariable("id") Long id,
                                             @Valid @RequestBody CategoryDTO categoryDTO,
-                                            BindingResult bindingResult,
-                                            HttpServletRequest request){
+                                            BindingResult bindingResult){
         ResponseDTO responseDTO = new ResponseDTO();
 
         try{
@@ -74,17 +69,14 @@ public class CategoryController {
                 return ResponseEntity.badRequest().body(responseDTO);
             }
 
-            Locale locale = localeResolver.resolveLocale(request);
-            categoryService.updateCategory(id, categoryDTO);
-            UpdateCategoryResponse updateCategoryResponse = UpdateCategoryResponse.builder()
-                    .message(messageSource.getMessage("category.update_category.update_successfully", null, locale))
-                    .build();
+            responseDTO.setData(categoryService.updateCategory(id, categoryDTO));
+            responseDTO.setMessage(localizationUtil.getLocalizedMessage(MessageKeys.UPDATE_CATEGORY_SUCCESSFULLY));
 
-            return ResponseEntity.ok(updateCategoryResponse);
+            return ResponseEntity.ok(responseDTO);
         }
         catch (Exception e){
             responseDTO.setMessage(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseDTO);
         }
     }
 
@@ -94,13 +86,13 @@ public class CategoryController {
 
         try{
             responseDTO.setData(categoryService.deleteCategory(id));
-            responseDTO.setMessage("Delete category successfully!");
+            responseDTO.setMessage(localizationUtil.getLocalizedMessage(MessageKeys.DELETE_CATEGORY_SUCCESSFULLY, id));
 
             return ResponseEntity.ok(responseDTO);
         }
         catch (Exception e){
             responseDTO.setMessage(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseDTO);
         }
     }
 }

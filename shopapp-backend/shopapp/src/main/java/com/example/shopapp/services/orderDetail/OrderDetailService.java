@@ -1,5 +1,6 @@
 package com.example.shopapp.services.orderDetail;
 
+import com.example.shopapp.constant.MessageKeys;
 import com.example.shopapp.entities.Order;
 import com.example.shopapp.entities.OrderDetail;
 import com.example.shopapp.entities.Product;
@@ -8,6 +9,7 @@ import com.example.shopapp.models.dtos.OrderDetailDTO;
 import com.example.shopapp.repositories.OrderDetailRepository;
 import com.example.shopapp.repositories.OrderRepository;
 import com.example.shopapp.repositories.ProductRepository;
+import com.example.shopapp.utils.LocalizationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,8 @@ public class OrderDetailService implements IOrderDetailService{
     private final OrderRepository orderRepository;
     private final OrderDetailRepository orderDetailRepository;
     private final ProductRepository productRepository;
+    private final LocalizationUtil localizationUtil;
+
     @Override
     public OrderDetail createOrderDetail(OrderDetailDTO orderDetailDTO) throws Exception {
         //tìm xem orderId có tồn tại ko
@@ -44,7 +48,7 @@ public class OrderDetailService implements IOrderDetailService{
     @Override
     public OrderDetail getOrderDetail(Long id) throws DataNotFoundException {
         return orderDetailRepository.findById(id)
-                .orElseThrow(()->new DataNotFoundException("Cannot find OrderDetail with id: "+id));
+                .orElseThrow(()->new DataNotFoundException(localizationUtil.getLocalizedMessage(MessageKeys.WRONG_ORDER_DETAIL_ID, id)));
     }
 
     @Override
@@ -69,7 +73,10 @@ public class OrderDetailService implements IOrderDetailService{
 
     @Override
     public void deleteById(Long id) {
-        orderDetailRepository.deleteById(id);
+        OrderDetail existingOrderDetail = getOrderDetail(id);
+        if(existingOrderDetail != null){
+            orderDetailRepository.deleteById(id);
+        }
     }
 
     @Override

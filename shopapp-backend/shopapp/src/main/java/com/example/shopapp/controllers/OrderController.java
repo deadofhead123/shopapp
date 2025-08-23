@@ -1,9 +1,11 @@
 package com.example.shopapp.controllers;
 
 
+import com.example.shopapp.constant.MessageKeys;
 import com.example.shopapp.models.dtos.OrderDTO;
 import com.example.shopapp.models.dtos.ResponseDTO;
 import com.example.shopapp.services.order.IOrderService;
+import com.example.shopapp.utils.LocalizationUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class OrderController {
     private final IOrderService orderService;
+    private final LocalizationUtil localizationUtil;
 
     @PostMapping("")
     public ResponseEntity<?> createOrder(
@@ -98,10 +101,11 @@ public class OrderController {
 
         try {
             responseDTO.setData(orderService.deleteOrder(id));
-            responseDTO.setMessage("Order deleted successfully.");
+            responseDTO.setMessage(localizationUtil.getLocalizedMessage(MessageKeys.DELETE_ORDER_SUCCESSFULLY, id));
             return ResponseEntity.ok(responseDTO);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            responseDTO.setMessage(localizationUtil.getLocalizedMessage(e.getMessage(), id));
+            return ResponseEntity.badRequest().body(responseDTO);
         }
     }
 }

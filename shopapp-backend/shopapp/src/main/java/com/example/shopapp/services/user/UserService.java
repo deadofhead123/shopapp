@@ -2,6 +2,7 @@ package com.example.shopapp.services.user;
 
 import com.example.shopapp.components.converter.UserConverter;
 import com.example.shopapp.configurations.JwtTokenUtil;
+import com.example.shopapp.constant.MessageKeys;
 import com.example.shopapp.entities.Role;
 import com.example.shopapp.entities.User;
 import com.example.shopapp.exceptions.DataNotFoundException;
@@ -36,12 +37,12 @@ public class UserService implements IUserService{
     @Override
     public UserDTO register(UserDTO userDTO) {
         if(userRepository.existsByPhoneNumber(userDTO.getPhoneNumber())){
-            throw new DataIntegrityViolationException("Phone number is already in use");
+            throw new DataIntegrityViolationException(MessageKeys.PHONE_EXISTS);
         }
 
         Role role = roleRepository.findById(userDTO.getRoleId()).orElseThrow(() -> new DataNotFoundException("Role not found"));
         if(role.getName().equals(Role.ADMIN)){
-            throw new PermissionDenyException("You cannot register an admin account");
+            throw new PermissionDenyException(MessageKeys.PERMISSION_DENY);
         }
 
         User newUser = User.builder()
@@ -72,13 +73,13 @@ public class UserService implements IUserService{
         // Normal login with phone number and password
         Optional<User> existingUser = userRepository.findByPhoneNumber(phoneNumber);
         if(existingUser.isEmpty()){
-            throw new UsernameNotFoundException("Invalid phone number / password " + phoneNumber);
+            throw new UsernameNotFoundException(MessageKeys.WRONG_PHONE_PASSWORD);
         }
 
         User user = existingUser.get();
         if(user.getFacebookAccountId() == 0 && user.getGoogleAccountId() == 0){
             if(!passwordEncoder.matches(password, user.getPassword())){
-                throw new BadCredentialsException("Password is incorrect");
+                throw new BadCredentialsException(MessageKeys.PASSWORD_NOT_CORRECT);
             }
         }
 

@@ -1,6 +1,7 @@
 package com.example.shopapp.services.product;
 
 import com.example.shopapp.components.converter.ProductConverter;
+import com.example.shopapp.constant.MessageKeys;
 import com.example.shopapp.models.dtos.ProductDTO;
 import com.example.shopapp.models.dtos.ProductImageDTO;
 import com.example.shopapp.entities.Category;
@@ -12,6 +13,7 @@ import com.example.shopapp.models.responses.ProductResponse;
 import com.example.shopapp.repositories.CategoryRepository;
 import com.example.shopapp.repositories.ProductImageRepository;
 import com.example.shopapp.repositories.ProductRepository;
+import com.example.shopapp.utils.LocalizationUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,6 +28,7 @@ public class ProductService implements IProductService{
     private final CategoryRepository categoryRepository;
     private final ProductConverter productConverter;
     private final ProductImageRepository productImageRepository;
+    private final LocalizationUtil localizationUtil;
 
     @Override
     public Product createProduct(ProductDTO productDTO) {
@@ -88,7 +91,7 @@ public class ProductService implements IProductService{
         */
         int maxImageNumber = productImageRepository.findByProductId(productImageDTO.getProductId()).size();
         if(maxImageNumber >= 5){
-            throw new InvalidParamException("Number of images cannot > 5");
+            throw new InvalidParamException(localizationUtil.getLocalizedMessage(MessageKeys.UPLOAD_IMAGES_MAX, ProductImage.MAX_IMAGE_PER_PRODUCT));
         }
 
         return productImageRepository.save(newProductImage);

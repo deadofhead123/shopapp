@@ -1,10 +1,12 @@
 package com.example.shopapp.controllers;
 
+import com.example.shopapp.constant.MessageKeys;
 import com.example.shopapp.entities.OrderDetail;
 import com.example.shopapp.exceptions.DataNotFoundException;
 import com.example.shopapp.models.dtos.OrderDetailDTO;
 import com.example.shopapp.models.responses.OrderDetailResponse;
 import com.example.shopapp.services.orderDetail.IOrderDetailService;
+import com.example.shopapp.utils.LocalizationUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderDetailController {
     private final IOrderDetailService orderDetailService;
+    private final LocalizationUtil localizationUtil;
     //Thêm mới 1 order detail
     @PostMapping("")
     public ResponseEntity<?> createOrderDetail(
@@ -65,8 +68,12 @@ public class OrderDetailController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteOrderDetail(
             @Valid @PathVariable("id") Long id) {
-        orderDetailService.deleteById(id);
-        return ResponseEntity.ok().body("Delete Order detail with id : "+id+" successfully");
+        try{
+            orderDetailService.deleteById(id);
+            return ResponseEntity.ok().body(localizationUtil.getLocalizedMessage(MessageKeys.DELETE_ORDER_DETAIL_SUCCESSFULLY, id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
         //return ResponseEntity.noContent().build();
     }
 }

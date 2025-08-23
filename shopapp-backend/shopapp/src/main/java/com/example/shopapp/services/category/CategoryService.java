@@ -1,8 +1,10 @@
 package com.example.shopapp.services.category;
 
+import com.example.shopapp.constant.MessageKeys;
 import com.example.shopapp.models.dtos.CategoryDTO;
 import com.example.shopapp.entities.Category;
 import com.example.shopapp.repositories.CategoryRepository;
+import com.example.shopapp.utils.LocalizationUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryService implements ICategoryService {
     private final CategoryRepository categoryRepository;
+    private final LocalizationUtil localizationUtil;
 
     @Override
     public List<Category> getAllCategories() {
@@ -22,7 +25,7 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public Category getCategoryById(Long id) {
-        return categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category not found"));
+        return categoryRepository.findById(id).orElseThrow(() -> new RuntimeException(localizationUtil.getLocalizedMessage(MessageKeys.WRONG_CATEGORY_ID, id)));
     }
 
     @Override

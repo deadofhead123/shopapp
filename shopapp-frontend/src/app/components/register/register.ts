@@ -5,8 +5,8 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { NgFor } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
-import { UserService } from '../service/user/userService.service';
-import { RegisterDTO } from '../dtos/user/register.dto';
+import { UserService } from '../../service/user/userService.service';
+import { RegisterDTO } from '../../dtos/user/register.dto';
 
 @Component({
   selector: 'app-register',

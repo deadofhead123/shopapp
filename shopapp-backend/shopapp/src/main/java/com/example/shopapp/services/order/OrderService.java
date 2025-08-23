@@ -1,6 +1,7 @@
 package com.example.shopapp.services.order;
 
 import com.example.shopapp.components.converter.OrderConverter;
+import com.example.shopapp.constant.MessageKeys;
 import com.example.shopapp.constant.OrderStatus;
 import com.example.shopapp.entities.Order;
 import com.example.shopapp.entities.User;
@@ -45,7 +46,7 @@ public class OrderService implements IOrderService{
     public OrderResponse findById(Long orderId) {
         return orderConverter.convertToResponse(
                 orderRepository.findById(orderId)
-                                .orElseThrow(() -> new DataNotFoundException("Cannot find order with id = " + orderId))
+                                .orElseThrow(() -> new DataNotFoundException(MessageKeys.WRONG_ORDER_ID))
         );
     }
 
@@ -67,7 +68,7 @@ public class OrderService implements IOrderService{
     @Override
     public Boolean deleteOrder(Long orderId) {
         Order existingOrder = orderRepository.findById(orderId)
-                .orElseThrow(() -> new DataNotFoundException("Cannot find order with id = " + orderId));
+                .orElseThrow(() -> new DataNotFoundException(MessageKeys.WRONG_ORDER_ID));
         existingOrder.setActive(false);
         orderRepository.save(existingOrder);
         return true;
