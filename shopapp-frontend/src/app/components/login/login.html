@@ -28,7 +28,8 @@
                     <div class="form-group">
                         <div class="form-check checkbox-text">
                             <span style="display: flex;">
-                                <input type="checkbox" class="form-check-input" id="remember">
+                                <input type="checkbox" class="form-check-input" id="remember" name="rememberMe"
+                                    [(ngModel)]="rememberMe">
                                 <label class="form-check-label text-start" for="remember">
                                     Ghi nhớ đăng nhập</label>
                             </span>
@@ -36,10 +37,11 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <select class="form-control access-right">
+                        <select class="form-control access-right" name="selectedRole" [(ngModel)]="selectedRole">
                             <option selected disabled>Quyền đăng nhập</option>
-                            <option>Người dùng</option>
-                            <option>Quản trị viên</option>
+                            @for(role of roles; track role.id){
+                            <option [ngValue]="role">{{role.name}}</option>
+                            }
                         </select>
                     </div>
                     <button type="button" class="login-button" (click)="login()">Đăng nhập</button>

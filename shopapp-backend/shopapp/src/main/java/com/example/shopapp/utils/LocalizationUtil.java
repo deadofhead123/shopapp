@@ -6,8 +6,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.LocaleResolver;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 @Component
@@ -19,14 +17,6 @@ public class LocalizationUtil {
     public String getLocalizedMessage(String message, Object ... params){ // "Object ... params" là spread operator, tức là bạn có thể truyền nhiều giá trị, hoặc 1 giá trị
         HttpServletRequest request = WebUtil.getCurrentRequest();
         Locale locale = localeResolver.resolveLocale(request);
-        List<Object> paramMessages = new ArrayList<>();
-
-        for(Object param : params){
-            String messageCode = param.toString();
-            if(messageCode.contains(".") && messageCode.contains("_")) paramMessages.add(messageSource.getMessage(messageCode, null, locale));
-            else paramMessages.add(param);
-        }
-
-        return messageSource.getMessage(message, paramMessages.toArray(), locale);
+        return messageSource.getMessage(message, params, locale);
     }
 }

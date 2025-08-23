@@ -1,6 +1,5 @@
 package com.example.shopapp.controllers;
 
-import com.example.shopapp.models.dtos.ResponseDTO;
 import com.example.shopapp.services.role.IRoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class RoleController {
     private final IRoleService roleService;
 
-    @GetMapping("")
+    @GetMapping()
     public ResponseEntity<?> getAllRoles(){
-        ResponseDTO responseDTO = new ResponseDTO();
-        responseDTO.setData(roleService.getAllRoles());
-        return ResponseEntity.ok(responseDTO);
+        return ResponseEntity.ok(roleService.getAllRoles());
     }
 }

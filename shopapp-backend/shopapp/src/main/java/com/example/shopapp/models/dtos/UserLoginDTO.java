@@ -19,4 +19,7 @@ public class UserLoginDTO {
     @NotBlank(message = "Password cannot be null")
     @Size(min = 3, max = 200, message = "Password must have length in range of 3 - 200 characters")
     String password;
+
+    @JsonProperty("role_id")
+    Long roleId;
 }

@@ -11,6 +11,7 @@ import com.example.shopapp.models.dtos.UserDTO;
 import com.example.shopapp.models.dtos.UserLoginDTO;
 import com.example.shopapp.repositories.RoleRepository;
 import com.example.shopapp.repositories.UserRepository;
+import com.example.shopapp.utils.LocalizationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -33,16 +35,17 @@ public class UserService implements IUserService{
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtil jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
+    private final LocalizationUtil localizationUtil;
 
     @Override
     public UserDTO register(UserDTO userDTO) {
         if(userRepository.existsByPhoneNumber(userDTO.getPhoneNumber())){
-            throw new DataIntegrityViolationException(MessageKeys.PHONE_EXISTS);
+            throw new DataIntegrityViolationException(localizationUtil.getLocalizedMessage(MessageKeys.PHONE_EXISTS));
         }
 
-        Role role = roleRepository.findById(userDTO.getRoleId()).orElseThrow(() -> new DataNotFoundException("Role not found"));
+        Role role = roleRepository.findById(userDTO.getRoleId()).orElseThrow(() -> new DataNotFoundException(localizationUtil.getLocalizedMessage(MessageKeys.ROLE_DOES_NOT_EXISTS)));
         if(role.getName().equals(Role.ADMIN)){
-            throw new PermissionDenyException(MessageKeys.PERMISSION_DENY);
+            throw new PermissionDenyException(localizationUtil.getLocalizedMessage(MessageKeys.PERMISSION_DENY));
         }
 
         User newUser = User.builder()
@@ -73,14 +76,19 @@ public class UserService implements IUserService{
         // Normal login with phone number and password
         Optional<User> existingUser = userRepository.findByPhoneNumber(phoneNumber);
         if(existingUser.isEmpty()){
-            throw new UsernameNotFoundException(MessageKeys.WRONG_PHONE_PASSWORD);
+            throw new UsernameNotFoundException(localizationUtil.getLocalizedMessage(MessageKeys.WRONG_PHONE_PASSWORD));
         }
 
         User user = existingUser.get();
         if(user.getFacebookAccountId() == 0 && user.getGoogleAccountId() == 0){
             if(!passwordEncoder.matches(password, user.getPassword())){
-                throw new BadCredentialsException(MessageKeys.PASSWORD_NOT_CORRECT);
+                throw new BadCredentialsException(localizationUtil.getLocalizedMessage(MessageKeys.WRONG_PHONE_PASSWORD));
             }
+        }
+
+        Optional<Role> role = roleRepository.findById(userLoginDTO.getRoleId());
+        if(role.isEmpty()|| !Objects.equals(userLoginDTO.getRoleId(), user.getRole().getId())){
+            throw new DataNotFoundException(localizationUtil.getLocalizedMessage(MessageKeys.ROLE_DOES_NOT_EXISTS));
         }
 
         // Authentication with Spring Security
