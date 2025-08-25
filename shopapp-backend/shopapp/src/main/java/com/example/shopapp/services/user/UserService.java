@@ -87,7 +87,7 @@ public class UserService implements IUserService{
         }
 
         Optional<Role> role = roleRepository.findById(userLoginDTO.getRoleId());
-        if(role.isEmpty()|| !Objects.equals(userLoginDTO.getRoleId(), user.getRole().getId())){
+        if(role.isEmpty() || !Objects.equals(userLoginDTO.getRoleId(), user.getRole().getId())){
             throw new DataNotFoundException(localizationUtil.getLocalizedMessage(MessageKeys.ROLE_DOES_NOT_EXISTS));
         }
 

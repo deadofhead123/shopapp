@@ -17,13 +17,11 @@ export class TokenInterceptor implements HttpInterceptor {
         // + Ta không thể sửa request trực tiếp được (Theo tôi nghĩ thì là để tránh lỗi cái request chính đang gửi đi), 
         // mà phải tạo ra 1 bản sao của nó, sửa bản sao đó, 
         // cuối cùng cho cái chính tham chiếu cái bản sao. 
-        if (token) {
-            req = req.clone({
-                setHeaders: {
-                    Authorization: `Bearer ${token}`,
-                }
-            });
-        }
+        req = req.clone({
+            setHeaders: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
         return next.handle(req);
     }
 

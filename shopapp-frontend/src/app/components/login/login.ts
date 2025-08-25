@@ -6,13 +6,15 @@ import { UserService } from '../../service/user.service';
 import { ResponseDTO } from '../../dtos/response/response.dto';
 import { TokenService } from '../../service/token.service';
 import { RoleService } from '../../service/role.service';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   imports: [
     HeaderComponent,
     FooterComponent,
-    FormsModule
+    FormsModule,
+    JsonPipe
   ],
   templateUrl: './login.html',
   styleUrl: './login.scss'

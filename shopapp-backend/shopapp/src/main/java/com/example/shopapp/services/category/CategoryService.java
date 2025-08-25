@@ -25,7 +25,7 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public Category getCategoryById(Long id) {
-        return categoryRepository.findById(id).orElseThrow(() -> new RuntimeException(localizationUtil.getLocalizedMessage(MessageKeys.WRONG_CATEGORY_ID, id)));
+        return categoryRepository.findById(id).orElseThrow(() -> new RuntimeException(localizationUtil.getLocalizedMessage(MessageKeys.CATEGORY_NOT_FOUND, id)));
     }
 
     @Override

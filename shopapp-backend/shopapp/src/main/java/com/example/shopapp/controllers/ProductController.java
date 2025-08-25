@@ -13,6 +13,7 @@ import com.example.shopapp.utils.LocalizationUtil;
 import com.github.javafaker.Faker;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -39,7 +41,7 @@ import java.util.stream.Collectors;
 @RequestMapping("${api.prefix}/products")
 public class ProductController {
     private final IProductService productService;
-    private final String productImageDirectoryPrefix = "\\products";
+    private final String productImageDirectoryPrefix = "\\products\\";
     private final LocalizationUtil localizationUtil;
 
     @GetMapping("")
@@ -84,75 +86,6 @@ public class ProductController {
         }
     }
 
-    @PostMapping(value = "/uploads/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> uploadImage(@PathVariable("id") Long productId, @ModelAttribute("files") List<MultipartFile> files){
-        ResponseDTO responseDTO = new ResponseDTO();
-
-        try{
-            Product existingProduct = productService.getProductById(productId);
-
-            // Prevent upload more than MAX_IMAGE_PER_PRODUCT images (From request) -> reduce check time in server side
-            if(files.size() > ProductImage.MAX_IMAGE_PER_PRODUCT){
-                throw new InvalidParamException(localizationUtil.getLocalizedMessage(MessageKeys.UPLOAD_IMAGES_MAX, ProductImage.MAX_IMAGE_PER_PRODUCT));
-            }
-
-            List<ProductImage> productImages = new ArrayList<>();
-            files = files == null ? new ArrayList<>() : files;
-
-            for(MultipartFile file : files){
-                if(file.getSize() == 0){
-                    continue;
-                }
-
-                if(file.getSize() > SystemConstant.maxImageFileSize){
-                    responseDTO.setMessage(localizationUtil.getLocalizedMessage(MessageKeys.UPLOAD_IMAGES_FILE_LARGE));
-                    return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(responseDTO);
-                }
-
-                String contentType = file.getContentType();
-                if(contentType == null || !contentType.startsWith("image/")){
-                    responseDTO.setMessage(localizationUtil.getLocalizedMessage(MessageKeys.UPLOAD_IMAGES_FILE_MUST_BE_IMAGE));
-                    return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(responseDTO);
-                }
-
-                String thumbnailSingle = saveImage(file);
-                ProductImage productImage = productService.createProductImage(ProductImageDTO.builder()
-                        .imageUrl(thumbnailSingle)
-                        .productId(existingProduct.getId()).build());
-                productImages.add(productImage);
-            }
-
-            responseDTO.setData(productImages);
-            return ResponseEntity.ok(responseDTO);
-        }
-        catch(Exception e){
-            responseDTO.setMessage(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
-        }
-    }
-
-    public String saveImage(MultipartFile file) throws Exception {
-        if(file.getOriginalFilename() == null){
-            throw new IOException(localizationUtil.getLocalizedMessage(MessageKeys.UPLOAD_IMAGES_FILE_MUST_BE_IMAGE));
-        }
-
-        // Folder to save
-        Path uploadDir = Paths.get(SystemConstant.imagePathPrefix + productImageDirectoryPrefix);
-        if(Files.notExists(uploadDir)){
-            Files.createDirectories(uploadDir);
-        }
-
-        // Image's name to save
-        String imageName = StringUtils.cleanPath(file.getOriginalFilename());
-        String uniqueFileName = UUID.randomUUID() + "_" + imageName;
-
-        // Save
-        Path destination = Paths.get(uploadDir.toString(), uniqueFileName);
-        Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
-
-        return uniqueFileName;
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable("id") Long productId, @Valid @RequestBody ProductDTO productDTO, BindingResult bindingResult) {
         ResponseDTO responseDTO = new ResponseDTO();
@@ -172,6 +105,175 @@ public class ProductController {
         catch(Exception e){
             responseDTO.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
+        }
+    }
+
+    //    @PostMapping(value = "/uploads/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    public ResponseEntity<?> uploadImage(@PathVariable("id") Long productId, @ModelAttribute("files") List<MultipartFile> files){
+//        ResponseDTO responseDTO = new ResponseDTO();
+//
+//        try{
+//            Product existingProduct = productService.getProductById(productId);
+//
+//            // Prevent upload more than MAX_IMAGE_PER_PRODUCT images (From request) -> reduce check time in server side
+//            if(files.size() > ProductImage.MAX_IMAGE_PER_PRODUCT){
+//                throw new InvalidParamException(localizationUtil.getLocalizedMessage(MessageKeys.UPLOAD_IMAGES_MAX, ProductImage.MAX_IMAGE_PER_PRODUCT));
+//            }
+//
+//            List<ProductImage> productImages = new ArrayList<>();
+//            files = files == null ? new ArrayList<>() : files;
+//
+//            for(MultipartFile file : files){
+//                if(file.getSize() == 0){
+//                    continue;
+//                }
+//
+//                if(file.getSize() > SystemConstant.maxImageFileSize){
+//                    responseDTO.setMessage(localizationUtil.getLocalizedMessage(MessageKeys.UPLOAD_IMAGES_FILE_LARGE));
+//                    return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(responseDTO);
+//                }
+//
+//                String contentType = file.getContentType();
+//                if(contentType == null || !contentType.startsWith("image/")){
+//                    responseDTO.setMessage(localizationUtil.getLocalizedMessage(MessageKeys.UPLOAD_IMAGES_FILE_MUST_BE_IMAGE));
+//                    return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(responseDTO);
+//                }
+//
+//                String thumbnailSingle = saveImage(file);
+//                ProductImage productImage = productService.createProductImage(ProductImageDTO.builder()
+//                        .imageUrl(thumbnailSingle)
+//                        .productId(existingProduct.getId()).build());
+//                productImages.add(productImage);
+//            }
+//
+//            responseDTO.setData(productImages);
+//            return ResponseEntity.ok(responseDTO);
+//        }
+//        catch(Exception e){
+//            responseDTO.setMessage(e.getMessage());
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
+//        }
+//    }
+//
+//    public String saveImage(MultipartFile file) throws Exception {
+//        if(file.getOriginalFilename() == null){
+//            throw new IOException(localizationUtil.getLocalizedMessage(MessageKeys.UPLOAD_IMAGES_FILE_MUST_BE_IMAGE));
+//        }
+//
+//        // Folder to save
+//        Path uploadDir = Paths.get(SystemConstant.imagePathPrefix + productImageDirectoryPrefix);
+//        if(Files.notExists(uploadDir)){
+//            Files.createDirectories(uploadDir);
+//        }
+//
+//        // Image's name to save
+//        String imageName = StringUtils.cleanPath(file.getOriginalFilename());
+//        String uniqueFileName = UUID.randomUUID() + "_" + imageName;
+//
+//        // Save
+//        Path destination = Paths.get(uploadDir.toString(), uniqueFileName);
+//        Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
+//
+//        return uniqueFileName;
+//    }
+
+    @PostMapping(value = "/uploads/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> uploadImages(
+            @PathVariable("id") Long productId,
+            @ModelAttribute("files") List<MultipartFile> files
+    ){
+        ResponseDTO responseDTO = new ResponseDTO();
+
+        try{
+            Product existingProduct = productService.getProductById(productId);
+            List<ProductImage> productImages = new ArrayList<>();
+            files = files == null ? new ArrayList<>() : files;
+
+            if(files.size() > 5){
+                responseDTO.setMessage(localizationUtil.getLocalizedMessage(MessageKeys.UPLOAD_IMAGES_MAX));
+                return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(responseDTO);
+            }
+
+            for(MultipartFile file : files){
+                long fileSize = file.getSize();
+
+                // Checking product image's number before adding a new image.
+                int productImageNumber = productService.countProductImages(productId);
+                if(productImageNumber >= ProductImage.MAX_IMAGE_PER_PRODUCT){
+                    throw new InvalidParamException(localizationUtil.getLocalizedMessage(MessageKeys.UPLOAD_IMAGES_MAX));
+                }
+
+                // Checking media type, capacity of file
+                if(fileSize == 0){
+                    continue;
+                }
+
+                if(fileSize > SystemConstant.maxImageFileSize ){
+                    responseDTO.setMessage(localizationUtil.getLocalizedMessage(MessageKeys.UPLOAD_IMAGES_FILE_LARGE));
+                    return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(responseDTO);
+                }
+
+                if(!Objects.requireNonNull(file.getContentType()).startsWith("image/")){
+                    responseDTO.setMessage(localizationUtil.getLocalizedMessage(MessageKeys.UPLOAD_IMAGES_FILE_MUST_BE_IMAGE));
+                    return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(responseDTO);
+                }
+
+                String productImageName = saveImage(file);
+                productImages.add(
+                        productService.createProductImage(
+                                ProductImageDTO.builder()
+                                        .productId(productId)
+                                        .imageUrl(productImageName)
+                                        .build()
+                        )
+                );
+            }
+
+            responseDTO.setData(productImages);
+            responseDTO.setMessage(localizationUtil.getLocalizedMessage(MessageKeys.UPLOAD_IMAGES_SUCCESSFULLY));
+            return ResponseEntity.ok(responseDTO);
+        }
+        catch(Exception e){
+            responseDTO.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
+        }
+    }
+
+    private String saveImage(MultipartFile file) throws IOException {
+        if(file.getOriginalFilename() == null){
+            throw new IOException(localizationUtil.getLocalizedMessage(MessageKeys.UPLOAD_IMAGES_FILE_MUST_BE_IMAGE));
+        }
+
+        Path uploadDir = Path.of(SystemConstant.imagePathPrefix + productImageDirectoryPrefix);
+        if(!Files.exists(uploadDir)){
+            Files.createDirectories(uploadDir);
+        }
+
+        String imageName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+        String imageNameEncoded = UUID.randomUUID() + "_" + imageName;
+
+        Files.copy(file.getInputStream(), Path.of(uploadDir.toString(), imageNameEncoded), StandardCopyOption.REPLACE_EXISTING);
+
+        return imageNameEncoded;
+    }
+
+    @GetMapping("/images/{imageName}")
+    public ResponseEntity<?> viewImage(@PathVariable("imageName") String imageName){
+        try{
+            Path imagePath = Paths.get(SystemConstant.imagePathPrefix + productImageDirectoryPrefix, imageName);
+            UrlResource resource = new UrlResource(imagePath.toUri());
+
+            if(resource.exists() && resource.isReadable()){
+                return ResponseEntity.ok()
+                        .contentType(MediaType.IMAGE_JPEG)
+                        .body(resource);
+            }
+            else{
+                return ResponseEntity.notFound().build();
+            }
+        }
+        catch(Exception e){
+            return ResponseEntity.notFound().build();
         }
     }
 

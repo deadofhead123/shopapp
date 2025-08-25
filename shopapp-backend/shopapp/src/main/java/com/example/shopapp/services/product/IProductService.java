@@ -16,4 +16,5 @@ public interface IProductService {
     Boolean deleteProduct(Long productId);
     ProductImage createProductImage(ProductImageDTO productImageDTO);
     boolean existsByName(String name);
+    int countProductImages(Long productId);
 }
