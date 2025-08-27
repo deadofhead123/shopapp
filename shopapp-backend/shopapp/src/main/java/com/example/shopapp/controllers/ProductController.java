@@ -8,12 +8,15 @@ import com.example.shopapp.exceptions.InvalidParamException;
 import com.example.shopapp.models.dtos.ProductDTO;
 import com.example.shopapp.models.dtos.ProductImageDTO;
 import com.example.shopapp.models.dtos.ResponseDTO;
+import com.example.shopapp.models.responses.ProductListResponse;
+import com.example.shopapp.models.responses.ProductResponse;
 import com.example.shopapp.services.product.IProductService;
 import com.example.shopapp.utils.LocalizationUtil;
 import com.github.javafaker.Faker;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.UrlResource;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -48,15 +51,23 @@ public class ProductController {
     public ResponseEntity<?> getAllProducts(
             @RequestParam(name = "limit", defaultValue = "6") Integer limit,
             @RequestParam(name = "page", defaultValue = "0") Integer page,
-            @RequestParam(name = "sort", defaultValue = "name") String sortField,
-            @RequestParam(name = "direction", defaultValue = "asc") String direction) {
+            @RequestParam(name = "sort", defaultValue = "name") String sortField) {
         ResponseDTO responseDTO = new ResponseDTO();
 
         try{
-            Sort sort = Sort.by(Sort.Direction.valueOf(direction), sortField);
-            responseDTO.setData(productService.getAllProducts(PageRequest.of(page, limit, sort)));
+//            Sort sort = Sort.by(Sort.Direction.valueOf(direction), sortField);
+            Sort sort = Sort.by(Sort.Direction.ASC, "id");
+            Page<ProductResponse> productResponseList = productService.getAllProducts(PageRequest.of(page - 1, limit, sort));
 
-            return ResponseEntity.ok(responseDTO);
+            int totalPages = productResponseList.getTotalPages();
+            List<ProductResponse> products = productResponseList.getContent();
+            
+            return ResponseEntity.ok(
+                    ProductListResponse.builder()
+                    .totalPages(totalPages)
+                    .products(products)
+                    .build()
+            );
         }
         catch(Exception e){
             responseDTO.setMessage(e.getMessage());
@@ -260,10 +271,10 @@ public class ProductController {
     @GetMapping("/images/{imageName}")
     public ResponseEntity<?> viewImage(@PathVariable("imageName") String imageName){
         try{
-            Path imagePath = Paths.get(SystemConstant.imagePathPrefix + productImageDirectoryPrefix, imageName);
+            Path imagePath = Paths.get(SystemConstant.imagePathPrefix + productImageDirectoryPrefix + imageName);
             UrlResource resource = new UrlResource(imagePath.toUri());
 
-            if(resource.exists() && resource.isReadable()){
+            if(resource.exists()){
                 return ResponseEntity.ok()
                         .contentType(MediaType.IMAGE_JPEG)
                         .body(resource);
@@ -272,7 +283,7 @@ public class ProductController {
                 return ResponseEntity.notFound().build();
             }
         }
-        catch(Exception e){
+        catch(Exception ex){
             return ResponseEntity.notFound().build();
         }
     }

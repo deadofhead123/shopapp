@@ -18,21 +18,13 @@
     </div>
 
     <div class="row">
+        @for(product of products; track product.thumbnail){
         <div class="col-lg-4 col-md-6">
             <div class="product-item">
-                <img src="https://imgix.bustle.com/rehost/2016/9/13/92f0e9fa-c656-4cdf-a455-15c05a22fdaf.jpg"
-                    alt="Wedding costume" class="product-image">
-                <p class="product-name">Name: Wedding costume</p>
-                <p class="product-description">Description: This is couple of dress for wedding</p>
-                <p class="product-price">Price: {{1234567 | currencyPipe}}</p>
-                <p class="product-warranty">Warranty: 6 months</p>
-                <div class="product-rating">
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                </div>
+                <img [src]="product.url" [alt]="product.name" class="product-image">
+                <p class="product-name">Name: {{product.name}}</p>
+                <p class="product-description">Description: {{product.description}}</p>
+                <p class="product-price">Price: {{product.price| currencyPipe}}</p>
                 <div class="product-actions">
                     <button class="btn btn-primary">Thêm vào giỏ hàng</button>
                     <span class="space-x"></span>
@@ -40,122 +32,48 @@
                 </div>
             </div>
         </div>
-
-        <div class="col-lg-4 col-md-6">
-            <div class="product-item">
-                <img src="https://www.autostraddle.com/wp-content/uploads/2021/09/Legends-of-Tomorrow-615-feature-avalance-lesbian-wedding.jpg?resize=1200,675"
-                    alt="Wedding costume" class="product-image">
-                <p class="product-name">Name: Wedding costume</p>
-                <p class="product-description">Description: This is couple of dress for wedding</p>
-                <p class="product-price">Price: {{1234567 | currencyPipe}}</p>
-                <p class="product-warranty">Warranty: 6 months</p>
-                <div class="product-rating">
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                </div>
-                <div class="product-actions">
-                    <button class="btn btn-primary">Thêm vào giỏ hàng</button>
-                    <span class="space-x"></span>
-                    <button class="btn btn-success">Mua ngay</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6">
-            <div class="product-item">
-                <img src="https://www.out.com/media-library/waverly-and-nicole-getting-married.jpg?id=32774586&width=1245&height=700&coordinates=0%2C0%2C0%2C15"
-                    alt="Wedding costume" class="product-image">
-                <p class="product-name">Name: Wedding costume</p>
-                <p class="product-description">Description: This is couple of dress for wedding</p>
-                <p class="product-price">Price: {{1234567 | currencyPipe}}</p>
-                <p class="product-warranty">Warranty: 6 months</p>
-                <div class="product-rating">
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                </div>
-                <div class="product-actions">
-                    <button class="btn btn-primary">Thêm vào giỏ hàng</button>
-                    <span class="space-x"></span>
-                    <button class="btn btn-success">Mua ngay</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6">
-            <div class="product-item">
-                <img src="https://www.out.com/media-library/waverly-and-nicole-getting-married.jpg?id=32774586&width=1245&height=700&coordinates=0%2C0%2C0%2C15"
-                    alt="Wedding costume" class="product-image">
-                <p class="product-name">Name: Wedding costume</p>
-                <p class="product-description">Description: This is couple of dress for wedding</p>
-                <p class="product-price">Price: {{1234567 | currencyPipe}}</p>
-                <p class="product-warranty">Warranty: 6 months</p>
-                <div class="product-rating">
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                </div>
-                <div class="product-actions">
-                    <button class="btn btn-primary">Thêm vào giỏ hàng</button>
-                    <span class="space-x"></span>
-                    <button class="btn btn-success">Mua ngay</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6">
-            <div class="product-item">
-                <img src="https://www.out.com/media-library/waverly-and-nicole-getting-married.jpg?id=32774586&width=1245&height=700&coordinates=0%2C0%2C0%2C15"
-                    alt="Wedding costume" class="product-image">
-                <p class="product-name">Name: Wedding costume</p>
-                <p class="product-description">Description: This is couple of dress for wedding</p>
-                <p class="product-price">Price: {{1234567 | currencyPipe}}</p>
-                <p class="product-warranty">Warranty: 6 months</p>
-                <div class="product-rating">
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                </div>
-                <div class="product-actions">
-                    <button class="btn btn-primary">Thêm vào giỏ hàng</button>
-                    <span class="space-x"></span>
-                    <button class="btn btn-success">Mua ngay</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6">
-            <div class="product-item">
-                <img src="https://www.out.com/media-library/waverly-and-nicole-getting-married.jpg?id=32774586&width=1245&height=700&coordinates=0%2C0%2C0%2C15"
-                    alt="Wedding costume" class="product-image">
-                <p class="product-name">Name: Wedding costume</p>
-                <p class="product-description">Description: This is couple of dress for wedding</p>
-                <p class="product-price">Price: {{1234567 | currencyPipe}}</p>
-                <p class="product-warranty">Warranty: 6 months</p>
-                <div class="product-rating">
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                </div>
-                <div class="product-actions">
-                    <button class="btn btn-primary">Thêm vào giỏ hàng</button>
-                    <span class="space-x"></span>
-                    <button class="btn btn-success">Mua ngay</button>
-                </div>
-            </div>
-        </div>
+        }
     </div>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            @if(currentPage > 1){
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Fisrt" (click)="onPageChange(1)">
+                    Fisrt
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous" (click)="onPageChange(currentPage - 1)">
+                    Previous
+                </a>
+            </li>
+            }
+            <ng-container>
+                @for(page of visiblePages; track page.valueOf()){
+                <li class="page-item" [ngClass]="{'active': page === currentPage}">
+                    <a class="page-link" href="#" aria-label="Previous" (click)="onPageChange(page)">
+                        {{page}}
+                    </a>
+                </li>
+                }
+            </ng-container>
+            <!-- <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li> -->
+            @if(currentPage < totalPages){ <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next" (click)="onPageChange(currentPage + 1)">
+                    Next
+                </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next" (click)="onPageChange(totalPages)">
+                        Last
+                    </a>
+                </li>
+                }
+        </ul>
+    </nav>
 </div>
 
 <app-footer></app-footer>

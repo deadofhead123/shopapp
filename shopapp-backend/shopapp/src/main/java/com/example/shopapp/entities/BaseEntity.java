@@ -3,6 +3,7 @@ package com.example.shopapp.entities;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -25,4 +26,9 @@ public class BaseEntity implements Serializable {
     @Column(name = "updated_at")
     @LastModifiedDate
     LocalDateTime updatedAt;
+
+    @PrePersist
+    public void prePersist(){
+        this.updatedAt = null;
+    }
 }
