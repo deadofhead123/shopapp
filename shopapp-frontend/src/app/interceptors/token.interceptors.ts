@@ -28,17 +28,3 @@ export class TokenInterceptor implements HttpInterceptor {
         return next.handle(req);
     }
 }
-
-export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
-    const tokenService = inject(TokenService);
-    const token = tokenService.getToken();
-
-    if (token) {
-        req = req.clone({
-            setHeaders: {
-                Authorization: `Bearer ${token}`,
-            }
-        });
-    }
-    return next(req);
-}

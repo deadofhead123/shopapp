@@ -20,7 +20,7 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(withEventReplay()),
     provideHttpClient(
       // withFetch(),
-      withInterceptors([tokenInterceptor])
+      withInterceptorsFromDi(),
     ),
 
   ]
