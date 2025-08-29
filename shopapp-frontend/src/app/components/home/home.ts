@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CurrencyPipe } from '../../shared/pipes/CurrencyPipe.pipe';
 import { HeaderComponent } from '../header/header';
 import { FooterComponent } from '../footer/footer';
@@ -7,6 +7,7 @@ import { Product } from '../../models/product';
 import { debug } from 'console';
 import { environment } from '../../environments/environment';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -19,24 +20,32 @@ import { CommonModule } from '@angular/common';
   templateUrl: './home.html',
   styleUrl: './home.scss'
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   products: Product[] = [];
   currentPage: number = 1;
   itemsPerPage: number = 12;
   // pages: number[] = [];
   totalPages: number = 0;
   visiblePages: number[] = [];
+  getProductsAPI: Subscription;
 
   constructor(private productService: ProductService) {
-
+    this.getProductsAPI = new Subscription();
   }
 
   ngOnInit(): void {
-    this.getProducts(this.currentPage, this.itemsPerPage);
+    this.getProducts(this.currentPage);
   }
 
-  getProducts(page: number, size: number) {
-    this.productService.getProducts(this.currentPage, this.itemsPerPage).subscribe({
+  ngOnDestroy(): void {
+    if (this.getProductsAPI) {
+      this.getProductsAPI.unsubscribe();
+      console.log('getProducts unsubscribed');
+    }
+  }
+
+  getProducts(page: number) {
+    this.getProductsAPI = this.productService.getProducts(this.currentPage, this.itemsPerPage).subscribe({
       next: (response: any) => {
         debugger
         response.products.forEach((product: Product) => {
@@ -44,7 +53,7 @@ export class HomeComponent implements OnInit {
         });
         this.products = response.products;
         this.totalPages = response.totalPages;
-        this.visiblePages = this.generateVisiblePageArray(this.currentPage, this.totalPages);
+        this.visiblePages = this.generateVisiblePageArray();
       },
       error: (error: any) => {
         debugger
@@ -59,15 +68,15 @@ export class HomeComponent implements OnInit {
   onPageChange(page: number) {
     debugger
     this.currentPage = page;
-    this.getProducts(this.currentPage, this.itemsPerPage);
+    this.getProducts(this.currentPage);
   }
 
-  generateVisiblePageArray(currentPage: number, totalPages: number): number[] {
+  generateVisiblePageArray(): number[] {
     const maxVisiblePages = 5;
     const halfVisiblePages = Math.floor(maxVisiblePages / 2);
 
-    let startPage = Math.max(currentPage - halfVisiblePages, 1); // Tránh trường hợp những trang đầu như 1, 2, 3... 1 vài số trang có thể bị âm
-    let endPage = Math.min(startPage + maxVisiblePages - 1, totalPages); // Tránh trường hợp đang ở các trang gần cuối, sẽ có các số trang ko nằm trong kết quả tìm kiếm
+    let startPage = Math.max(this.currentPage - halfVisiblePages, 1); // Tránh trường hợp những trang đầu như 1, 2, 3... 1 vài số trang có thể bị âm
+    let endPage = Math.min(startPage + maxVisiblePages - 1, this.totalPages); // Tránh trường hợp đang ở các trang gần cuối, sẽ có các số trang ko nằm trong kết quả tìm kiếm
 
     // Tránh trường hợp những trang gần cuối nó sẽ ko hiện đủ 5 con số
     // Ta có thể thử với ví dụ: {currentPage = [18, 19, hoặc 20], totalPages = 20}

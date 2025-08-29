@@ -1,5 +1,5 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpInterceptorFn, HttpRequest } from "@angular/common/http";
+import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { TokenService } from "../service/token.service";
 
@@ -12,17 +12,33 @@ export class TokenInterceptor implements HttpInterceptor {
         req: HttpRequest<any>,
         next: HttpHandler
     ): Observable<HttpEvent<any>> {
+        debugger
         const token = this.tokenService.getToken();
         // - Sửa 1 phần header để nó mang token đi.
         // + Ta không thể sửa request trực tiếp được (Theo tôi nghĩ thì là để tránh lỗi cái request chính đang gửi đi), 
         // mà phải tạo ra 1 bản sao của nó, sửa bản sao đó, 
         // cuối cùng cho cái chính tham chiếu cái bản sao. 
+        if (token) {
+            req = req.clone({
+                setHeaders: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+        }
+        return next.handle(req);
+    }
+}
+
+export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
+    const tokenService = inject(TokenService);
+    const token = tokenService.getToken();
+
+    if (token) {
         req = req.clone({
             setHeaders: {
                 Authorization: `Bearer ${token}`,
             }
         });
-        return next.handle(req);
     }
-
+    return next(req);
 }

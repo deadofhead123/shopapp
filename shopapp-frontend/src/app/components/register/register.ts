@@ -2,8 +2,6 @@ import { Component, ViewChild } from '@angular/core';
 import { HeaderComponent } from '../header/header';
 import { FooterComponent } from '../footer/footer';
 import { FormsModule, NgForm } from '@angular/forms';
-import { NgFor } from '@angular/common';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../service/user.service';
 import { RegisterDTO } from '../../dtos/user/register.dto';
@@ -28,7 +26,7 @@ export class RegisterComponent {
   dateOfBirth: Date;
   isAccepted: boolean;
 
-  constructor(private http: HttpClient, private router: Router, private userService: UserService) {
+  constructor(private router: Router, private userService: UserService) {
     this.phoneNumber = '';
     this.password = '';
     this.retypePassword = '';

@@ -13,12 +13,12 @@ import { FormsModule } from '@angular/forms';
   imports: [
     RouterOutlet,
     HomeComponent,
-    OrderComponent,
-    OrderConfirmComponent,
-    LoginComponent,
-    RegisterComponent,
-    DetailProductComponent,
-    FormsModule
+    // OrderComponent,
+    // OrderConfirmComponent,
+    // LoginComponent,
+    // RegisterComponent,
+    // DetailProductComponent,
+    // FormsModule
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss'

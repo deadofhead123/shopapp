@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { HttpUtilService } from './http.util.service';
 import { Product } from '../models/product';
@@ -10,12 +10,9 @@ import { Product } from '../models/product';
 })
 export class ProductService {
     private apiGetProducts = `${environment.apiBaseUrl}/products`;
-    private apiConfig;
 
     constructor(private http: HttpClient, private httpUtilService: HttpUtilService) {
-        this.apiConfig = {
-            headers: httpUtilService.createHeader(),
-        }
+
     }
 
     getProducts(page: number, size: number): Observable<Product[]> {
