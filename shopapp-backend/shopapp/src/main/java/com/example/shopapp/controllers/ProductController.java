@@ -49,15 +49,16 @@ public class ProductController {
 
     @GetMapping("")
     public ResponseEntity<?> getAllProducts(
-            @RequestParam(name = "limit", defaultValue = "6") Integer limit,
-            @RequestParam(name = "page", defaultValue = "0") Integer page,
-            @RequestParam(name = "sort", defaultValue = "name") String sortField) {
+            @RequestParam(name = "limit") Integer limit,
+            @RequestParam(name = "page") Integer page,
+            @RequestParam(name = "keyword", required = false) String keyword,
+            @RequestParam(name = "categoryId", required = false) Integer categoryId) {
         ResponseDTO responseDTO = new ResponseDTO();
 
         try{
 //            Sort sort = Sort.by(Sort.Direction.valueOf(direction), sortField);
             Sort sort = Sort.by(Sort.Direction.ASC, "id");
-            Page<ProductResponse> productResponseList = productService.getAllProducts(PageRequest.of(page - 1, limit, sort));
+            Page<ProductResponse> productResponseList = productService.getAllProducts(keyword, categoryId, PageRequest.of(page - 1, limit, sort));
 
             int totalPages = productResponseList.getTotalPages();
             List<ProductResponse> products = productResponseList.getContent();

@@ -47,8 +47,8 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public Page<ProductResponse> getAllProducts(PageRequest request) {
-        Page<Product> products = productRepository.findAll(request);
+    public Page<ProductResponse> getAllProducts(String keyword, Integer categoryId, PageRequest request) {
+        Page<Product> products = productRepository.findAll(keyword, categoryId,request);
         return products.map(productConverter::convertToResponse);
     }
 

@@ -7,6 +7,9 @@ import { Product } from '../../models/product';
 import { environment } from '../../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
+import { Category } from '../../models/category';
+import { CategoryService } from '../../service/category.service';
+import { FormsModule, NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
@@ -15,6 +18,7 @@ import { Subscription } from 'rxjs';
     HeaderComponent,
     FooterComponent,
     CommonModule,
+    FormsModule,
   ],
   templateUrl: './home.html',
   styleUrl: './home.scss'
@@ -27,12 +31,18 @@ export class HomeComponent implements OnInit, OnDestroy {
   totalPages: number = 0;
   visiblePages: number[] = [];
   getProductsAPI: Subscription;
+  categories: Category[] = [];
+  selectedCategory: number | undefined;
 
-  constructor(private productService: ProductService) {
+  constructor(
+    private productService: ProductService,
+    private categoryService: CategoryService
+  ) {
     this.getProductsAPI = new Subscription();
   }
 
   ngOnInit(): void {
+    this.getCategories();
     this.getProducts(this.currentPage);
   }
 
@@ -41,6 +51,24 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.getProductsAPI.unsubscribe();
       console.log('getProducts unsubscribed');
     }
+  }
+
+  getCategories() {
+    debugger
+    this.getProductsAPI = this.categoryService.getCategories().subscribe({
+      next: (response: any) => {
+        debugger
+        this.categories = response.data;
+        this.selectedCategory = 0;
+      },
+      error: (error: any) => {
+        debugger
+        alert('Failed to get categories!');
+      },
+      complete: () => {
+        debugger
+      }
+    });
   }
 
   getProducts(page: number) {
