@@ -15,10 +15,12 @@ export class ProductService {
 
     }
 
-    getProducts(page: number, size: number): Observable<Product[]> {
+    getProducts(keyword: string, categoryId: number, page: number, size: number): Observable<Product[]> {
         const params = new HttpParams()
             .set('page', page)
-            .set('limit', size);
+            .set('limit', size)
+            .set('keyword', keyword)
+            .set('cateogoryId', categoryId);
         return this.http.get<Product[]>(this.apiGetProducts, { params });
     }
 }

@@ -32,7 +32,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   visiblePages: number[] = [];
   getProductsAPI: Subscription;
   categories: Category[] = [];
-  selectedCategory: number | undefined;
+  keyword: string = '';
+  selectedCategory: number = 0;
 
   constructor(
     private productService: ProductService,
@@ -73,7 +74,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   getProducts(page: number) {
     debugger
-    this.getProductsAPI = this.productService.getProducts(this.currentPage, this.itemsPerPage).subscribe({
+    this.getProductsAPI = this.productService.getProducts(this.keyword, this.selectedCategory, this.currentPage, this.itemsPerPage).subscribe({
       next: (response: any) => {
         debugger
         response.products.forEach((product: Product) => {
@@ -91,6 +92,11 @@ export class HomeComponent implements OnInit, OnDestroy {
         debugger
       }
     });
+  }
+
+  searchProduct() {
+    this.currentPage = 1;
+    this.getProducts(this.currentPage);
   }
 
   onPageChange(page: number) {
@@ -117,6 +123,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     // ".fill(0)": lấp đầy mảng bằng các phần tử có giá trị 0
     // ".map((_, index) => startPage + index)": thay thế các phần tử trong cái mảng vừa rồi (toàn phần tử 0) bằng giá trị ta quy định
     //   + index là chỉ số mảng, bắt đầu từ 0
-    return new Array(maxVisiblePages).fill(0).map((_, index) => startPage + index);
+    return new Array(endPage - startPage + 1).fill(0).map((_, index) => startPage + index);
   }
 }

@@ -201,7 +201,7 @@ public class ProductController {
     }
 
     @GetMapping("/images/{imageName}")
-    public ResponseEntity<?> viewImage(@PathVariable("imageName") String imageName){
+    public ResponseEntity<?> viewImage(@PathVariable(name = "imageName", required = false) String imageName){
         try{
             Path imagePath = Paths.get(SystemConstant.imagePathPrefix + productImageDirectoryPrefix + imageName);
             UrlResource resource = new UrlResource(imagePath.toUri());
@@ -212,7 +212,11 @@ public class ProductController {
                         .body(resource);
             }
             else{
-                return ResponseEntity.notFound().build();
+                Path notFoundPath = Paths.get(SystemConstant.imagePathPrefix + "/404-not-found.jpg");
+                UrlResource notFoundResource = new UrlResource(notFoundPath.toUri());
+                return ResponseEntity.ok()
+                        .contentType(MediaType.IMAGE_JPEG)
+                        .body(notFoundResource);
             }
         }
         catch(Exception ex){
