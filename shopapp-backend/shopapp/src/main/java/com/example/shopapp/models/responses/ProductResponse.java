@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductResponse extends BaseResponse {
+    Long id;
     String name;
     Float price;
     String thumbnail;

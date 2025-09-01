@@ -7,6 +7,8 @@ import { Product } from '../../models/product';
 import { CurrencyPipe } from '../../shared/pipes/CurrencyPipe.pipe';
 import { environment } from '../../../environments/environment';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { CartService } from '../../service/cart.service';
 
 @Component({
   selector: 'app-detail-product',
@@ -15,17 +17,22 @@ import { CommonModule } from '@angular/common';
     FooterComponent,
     CurrencyPipe,
     CommonModule,
+    FormsModule,
   ],
-  templateUrl: './detail-product.html',
-  styleUrl: './detail-product.scss'
+  templateUrl: './detail-product.component.html',
+  styleUrl: './detail-product.component.scss'
 })
 export class DetailProductComponent implements OnInit, OnDestroy {
   product?: Product;
   currentImageIndex: number = 0;
   imageQuantity: number = 0;
+  quantity: number = 1;
   getProduct: Subscription;
 
-  constructor(private productService: ProductService) {
+  constructor(
+    private productService: ProductService,
+    private cartService: CartService
+  ) {
     this.getProduct = new Subscription();
   }
 
@@ -78,11 +85,32 @@ export class DetailProductComponent implements OnInit, OnDestroy {
     this.currentImageIndex = index;
   }
 
-  handleNextClick() {
+  handlePreviousImage() {
+    this.adjustCurrentImageIndexLimit(this.currentImageIndex - 1);
+  }
+
+  handleNextImage() {
     this.adjustCurrentImageIndexLimit(this.currentImageIndex + 1);
   }
 
-  handlePreviousClick() {
-    this.adjustCurrentImageIndexLimit(this.currentImageIndex - 1);
+  addToCart() {
+    debugger
+    if (this.product) {
+      this.cartService.addToCart(this.product?.id, this.quantity);
+    }
+    else {
+      alert('Error! Product not exist!');
+    }
+  }
+
+  decreaseQuantity() {
+    this.quantity--;
+    if (this.quantity < 0) {
+      this.quantity = 0;
+    }
+  }
+
+  increaseQuantity() {
+    this.quantity++;
   }
 }

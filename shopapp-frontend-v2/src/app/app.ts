@@ -5,7 +5,7 @@ import { OrderComponent } from './components/order/order';
 import { OrderConfirmComponent } from './components/order-confirm/order-confirm';
 import { LoginComponent } from './components/login/login';
 import { RegisterComponent } from './components/register/register';
-import { DetailProductComponent } from './components/detail-product/detail-product';
+import { DetailProductComponent } from './components/detail-product/detail-product.component';
 import { FormsModule } from '@angular/forms';
 
 @Component({
