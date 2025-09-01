@@ -19,6 +19,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -42,8 +44,10 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public Product getProductById(Long productId) {
-        return productRepository.findById(productId).get();
+    public ProductResponse getProductById(Long productId) {
+        Product existingProduct = productRepository.findById(productId)
+                .orElseThrow(() -> new DataNotFoundException(localizationUtil.getLocalizedMessage(MessageKeys.PRODUCT_NOT_FOUND)));
+        return productConverter.convertToResponse(existingProduct);
     }
 
     @Override

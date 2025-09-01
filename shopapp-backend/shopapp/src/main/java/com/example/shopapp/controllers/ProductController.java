@@ -1,5 +1,6 @@
 package com.example.shopapp.controllers;
 
+import com.example.shopapp.components.converter.ProductConverter;
 import com.example.shopapp.constant.MessageKeys;
 import com.example.shopapp.constant.SystemConstant;
 import com.example.shopapp.entities.Product;
@@ -44,6 +45,7 @@ import java.util.stream.Collectors;
 @RequestMapping("${api.prefix}/products")
 public class ProductController {
     private final IProductService productService;
+    private final ProductConverter productConverter;
     private final String productImageDirectoryPrefix = "\\products\\";
     private final LocalizationUtil localizationUtil;
 
@@ -73,6 +75,21 @@ public class ProductController {
         catch(Exception e){
             responseDTO.setMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getProductById(@PathVariable(name = "id") Long productId){
+        ResponseDTO responseDTO = new ResponseDTO();
+
+        try{
+            ProductResponse productResponse = productService.getProductById(productId);
+            responseDTO.setData(productResponse);
+            return ResponseEntity.ok(responseDTO);
+        }
+        catch(Exception e){
+            responseDTO.setMessage(e.getMessage());
+            return ResponseEntity.badRequest().body(responseDTO);
         }
     }
 
@@ -128,7 +145,7 @@ public class ProductController {
         ResponseDTO responseDTO = new ResponseDTO();
 
         try{
-            Product existingProduct = productService.getProductById(productId);
+            ProductResponse existingProduct = productService.getProductById(productId);
             List<ProductImage> productImages = new ArrayList<>();
             files = files == null ? new ArrayList<>() : files;
 

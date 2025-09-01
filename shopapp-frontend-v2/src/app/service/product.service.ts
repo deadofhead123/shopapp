@@ -9,7 +9,7 @@ import { Product } from '../models/product';
     providedIn: 'root'
 })
 export class ProductService {
-    private apiGetProducts = `${environment.apiBaseUrl}/products`;
+    private productAPI = `${environment.apiBaseUrl}/products`;
 
     constructor(private http: HttpClient, private httpUtilService: HttpUtilService) {
 
@@ -21,6 +21,10 @@ export class ProductService {
             .set('limit', size)
             .set('keyword', keyword)
             .set('cateogoryId', categoryId);
-        return this.http.get<Product[]>(this.apiGetProducts, { params });
+        return this.http.get<Product[]>(this.productAPI, { params });
+    }
+
+    getProductById(productId: number): Observable<Product> {
+        return this.http.get<Product>(`${this.productAPI}/${productId}`);
     }
 }

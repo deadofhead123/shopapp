@@ -22,4 +22,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("categoryId") Integer categoryId,
             Pageable pageable
     );//phân trang
+
 }

@@ -7,21 +7,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductResponse extends BaseResponse {
-    String name;
-    Float price;
-    String thumbnail;
-    String description;
+public class ProductImageResponse {
+    Long id;
 
-    @JsonProperty("category_id")
-    Long categoryId;
-
-    @JsonProperty("product_images")
-    List<ProductImageResponse> productImageResponses;
+    @JsonProperty("image_url")
+    String imageUrl;
 }
