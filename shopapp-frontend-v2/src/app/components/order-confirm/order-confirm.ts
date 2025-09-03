@@ -59,7 +59,7 @@ export class OrderConfirmComponent implements OnInit {
             product.thumbnail = `${environment.apiBaseUrl}/products/images/${product.thumbnail}`;
           }
           return {
-            product: product,
+            product: product!,
             quantity: existingCart.get(id)!
           }
         });
