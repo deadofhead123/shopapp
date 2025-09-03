@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -48,6 +49,12 @@ public class ProductService implements IProductService{
         Product existingProduct = productRepository.findById(productId)
                 .orElseThrow(() -> new DataNotFoundException(localizationUtil.getLocalizedMessage(MessageKeys.PRODUCT_NOT_FOUND)));
         return productConverter.convertToResponse(existingProduct);
+    }
+
+    @Override
+    public List<ProductResponse> getProductByIds(List<Long> ids){
+        List<Product> products = productRepository.findAllById(ids);
+        return products.stream().map(productConverter::convertToResponse).toList();
     }
 
     @Override

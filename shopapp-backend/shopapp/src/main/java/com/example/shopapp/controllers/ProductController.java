@@ -78,6 +78,7 @@ public class ProductController {
         }
     }
 
+    // Finding single product
     @GetMapping("/{id}")
     public ResponseEntity<?> getProductById(@PathVariable(name = "id") Long productId){
         ResponseDTO responseDTO = new ResponseDTO();
@@ -85,6 +86,27 @@ public class ProductController {
         try{
             ProductResponse productResponse = productService.getProductById(productId);
             responseDTO.setData(productResponse);
+            return ResponseEntity.ok(responseDTO);
+        }
+        catch(Exception e){
+            responseDTO.setMessage(e.getMessage());
+            return ResponseEntity.badRequest().body(responseDTO);
+        }
+    }
+
+    // Finding multiple products
+    @GetMapping("/orderedList")
+    public ResponseEntity<?> getProductsByIds(@RequestParam(name = "ids") List<Long> ids){
+        ResponseDTO responseDTO = new ResponseDTO();
+
+        try{
+            List<ProductResponse> productResponses = new ArrayList<>();
+
+            if(!ids.isEmpty()){
+                productResponses = productService.getProductByIds(ids);
+            }
+
+            responseDTO.setData(productResponses);
             return ResponseEntity.ok(responseDTO);
         }
         catch(Exception e){

@@ -15,41 +15,23 @@
                 </tr>
             </thead>
             <tbody>
+                @for(cartItem of cartItems; track cartItem.product.id){
                 <tr>
                     <td>
                         <div class="product-info">
-                            <img src="https://images.pexels.com/photos/389819/pexels-photo-389819.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                                alt="Product Image" class="product-image">
-                            <span class="product-name">iphone 13</span>
+                            <img [src]="cartItem.product.thumbnail" alt="Product Image" class="product-image">
+                            <span class="product-name">{{cartItem.product.name}}</span>
                         </div>
                     </td>
-                    <td>2</td>
-                    <td>100,000 đ</td>
-                    <td>200,000 đ</td>
+                    <td>{{cartItem.quantity}}</td>
+                    <td>{{cartItem.product.price | currencyPipe}}</td>
+                    <td>{{cartItem.product.price * cartItem.quantity | currencyPipe}}</td>
                 </tr>
+                }
                 <tr>
-                    <td>
-                        <div class="product-info">
-                            <img src="https://images.pexels.com/photos/389819/pexels-photo-389819.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                                alt="Product Image" class="product-image">
-                            <span class="product-name">Macbook pro M2 2023</span>
-                        </div>
-                    </td>
-                    <td>2</td>
-                    <td>100,000 đ</td>
-                    <td>200,000 đ</td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="product-info">
-                            <img src="https://images.pexels.com/photos/389819/pexels-photo-389819.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                                alt="Product Image" class="product-image">
-                            <span class="product-name">Apple Vision Pro 2023</span>
-                        </div>
-                    </td>
-                    <td>2</td>
-                    <td>100,000 đ</td>
-                    <td>200,000 đ</td>
+                    <td colspan="2"></td>
+                    <td><b>Tổng tiền: </b></td>
+                    <td><b>{{total | currencyPipe}}</b></td>
                 </tr>
             </tbody>
         </table>

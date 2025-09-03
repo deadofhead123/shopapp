@@ -8,9 +8,12 @@ import com.example.shopapp.models.responses.ProductResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.List;
+
 public interface IProductService {
     Product createProduct(ProductDTO productDTO);
     ProductResponse getProductById(Long productId);
+    List<ProductResponse> getProductByIds(List<Long> ids);
     Page<ProductResponse> getAllProducts(String keyword, Integer categoryId, PageRequest request);
     ProductDTO updateProduct(Long productId, ProductDTO productDTO);
     Boolean deleteProduct(Long productId);

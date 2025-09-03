@@ -48,7 +48,7 @@ export class DetailProductComponent implements OnInit, OnDestroy {
   }
 
   getProductById() {
-    let idParam = 317;
+    let idParam = 7;
     idParam = +idParam;
     if (isNaN(idParam)) {
       console.log('Invalid product id! This is not a number!');
@@ -65,8 +65,9 @@ export class DetailProductComponent implements OnInit, OnDestroy {
           }
         },
         error: (error: any) => {
-          alert(error.message);
-        }
+          debugger
+          alert(error.error.message);
+        },
       });
     }
   }

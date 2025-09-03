@@ -27,4 +27,9 @@ export class ProductService {
     getProductById(productId: number): Observable<Product> {
         return this.http.get<Product>(`${this.productAPI}/${productId}`);
     }
+
+    getProductsByIds(productIds: number[]): Observable<Product[]> {
+        const params = new HttpParams().set('ids', productIds.toString());
+        return this.http.get<Product[]>(`${this.productAPI}/orderedList`, { params });
+    }
 }

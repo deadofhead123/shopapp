@@ -4,8 +4,8 @@ import { Injectable } from "@angular/core";
     'providedIn': 'root'
 })
 export class CartService {
-    cart: Map<number, number> = new Map<number, number>();
-    cartKeyword: string = 'cart';
+    private cart: Map<number, number> = new Map<number, number>();
+    private cartKeyword: string = 'cart';
 
     constructor() {
         debugger
@@ -15,6 +15,10 @@ export class CartService {
         if (storedCart) {
             this.cart = new Map(JSON.parse(storedCart));
         }
+    }
+
+    getCart() {
+        return this.cart;
     }
 
     // quantity: number = 1
